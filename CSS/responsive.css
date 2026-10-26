@@ -1,0 +1,97 @@
+@media (max-width: 1024px) {
+  .kanban-board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-4 {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .header-nav {
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 6px;
+    gap: 10px;
+  }
+
+  .header-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .role-quick-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .role-bar-nav {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .kanban-board {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .page-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .modal-window {
+    width: 96%;
+    margin: 10px;
+  }
+
+  .responsive-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px 12px;
+  }
+
+  .page-title {
+    font-size: 1.3rem;
+  }
+
+  .dish-thumb {
+    height: 150px;
+  }
+
+  .ai-actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ai-actions-bar .btn {
+    width: 100%;
+  }
+
+  .btn {
+    padding: 8px 14px;
+    font-size: 0.88rem;
+  }
+}
