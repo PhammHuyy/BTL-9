@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Tiết Đơn Hàng Bếp | MenuMind - Nhân viên bếp</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/pages/kitchen-order-detail.css">
+</head>
+<body style="background: #F1F5F9;">
+
+  <header class="site-header" style="background:#0F172A; border-bottom-color:#1E293B; color:#fff;">
+    <div class="brand-logo" style="color:#F97316;">
+      <span style="font-size: 1.4rem;">👨‍🍳</span>
+      <span>MenuMind KDS</span>
+    </div>
+
+    <nav class="header-nav">
+      <a href="kitchen-board.html" class="nav-link" style="color:#94A3B8;">← Quay lại Bảng điều phối</a>
+      <a href="kitchen-wait-time-alerts.html" class="nav-link" style="color:#94A3B8;">⏱️ Cảnh báo thời gian chờ</a>
+    </nav>
+
+    <div class="header-right">
+      <span class="badge" style="background:#334155; color:#fff;" id="topHeaderOrderId">Đơn #ORD-101</span>
+      <a href="kitchen-board.html" class="btn btn-primary btn-sm">Về Kanban</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+      <div style="font-size: 0.9rem; color: var(--text-muted);">
+        <a href="kitchen-board.html" style="color: var(--primary);">Điều phối bếp</a> &gt; 
+        <strong style="color: var(--secondary);" id="breadcrumbTitle">Chi tiết đơn #ORD-101</strong>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Chọn đơn khác:</span>
+        <select id="switchOrderSelect" class="form-control" style="width: auto; padding: 6px 12px;" onchange="switchOrder(this.value)"></select>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <h1 style="font-size: 1.5rem; color: var(--secondary);" id="orderTitle">Phiếu Bếp: Bàn 01</h1>
+            <span id="orderStatusBadge" class="badge badge-preparing">Đang nấu</span>
+            <span id="orderPriorityBadge" class="badge" style="background:#FEF3C7; color:#B45309;">Ưu tiên: Bình thường</span>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+            Khách: <strong id="custNameText" style="color: var(--secondary);">Nguyễn Hải Đăng</strong> • SĐT: <span id="custPhoneText">0912345678</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button class="btn btn-secondary btn-sm" onclick="togglePriority()">
+            ⚡ Đổi mức ưu tiên (Gấp / Thường)
+          </button>
+          <button class="btn btn-success btn-sm" onclick="markAllItemsReady()">
+            ✓ Hoàn tất cả đơn
+          </button>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 16px;">
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Thời gian vào đơn:</span>
+          <div style="font-weight: 700; color: var(--secondary);" id="orderCreatedAt">18:15:00</div>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Thời gian đã đợi:</span>
+          <div style="font-weight: 700; color: #DC2626;" id="orderElapsed">19 phút</div>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Tổng số món:</span>
+          <div style="font-weight: 700; color: var(--secondary);" id="orderTotalItemsCount">2 món</div>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Trạng thái bàn:</span>
+          <div style="font-weight: 700; color: #0284C7;">Đang có khách ngồi</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-detail-grid">
+      <div>
+        <div class="card">
+          <h3 style="font-size: 1.15rem; color: var(--secondary); margin-bottom: 16px;">
+            🍳 Danh Sách Món Cần Chế Biến
+          </h3>
+
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+              <thead>
+                <tr style="background: var(--bg-subtle); border-bottom: 2px solid var(--border-color);">
+                  <th style="padding: 10px;">Món ăn & Ghi chú khách</th>
+                  <th style="padding: 10px; width: 80px; text-align: center;">SL</th>
+                  <th style="padding: 10px; width: 110px;">Trạm bếp</th>
+                  <th style="padding: 10px; width: 160px;">Trạng thái chế biến</th>
+                  <th style="padding: 10px; width: 100px; text-align: right;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="orderItemsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 20px;">
+          <h3 style="font-size: 1.05rem; color: var(--secondary); margin-bottom: 12px;">
+            📝 Ghi Chú & Điều Phối Nội Bộ Ca Trực
+          </h3>
+          <div class="form-group">
+            <textarea id="internalChefNote" class="form-control" rows="2" placeholder="Ví dụ: Bàn 01 khách cần đi sớm, trạm Nướng ưu tiên ra thịt trước 18h30..."></textarea>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="saveChefNote()">💾 Lưu ghi chú bếp</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h3 style="font-size: 1.1rem; color: var(--secondary);">
+              📦 Checklist Nguyên Liệu
+            </h3>
+            <span class="badge" style="background:#E0F2FE; color:#0369A1;">Tự động tổng hợp</span>
+          </div>
+
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
+            Phụ bếp tích chọn nguyên liệu đã lấy sẵn từ kho lạnh để đầu bếp chính nấu:
+          </p>
+
+          <div id="ingredientsChecklist"></div>
+
+          <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border-color);">
+            <button class="btn btn-danger btn-sm" style="width: 100%;" onclick="handleReportOutOfStock()">
+              ⚠️ Báo hết nguyên liệu món này
+            </button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 20px; background:#FFFBEB; border-color:#FDE68A;">
+          <h4 style="font-size: 0.95rem; color: #92400E; margin-bottom: 8px;">⏱️ Cập nhật thời gian chờ</h4>
+          <p style="font-size: 0.82rem; color: #B45309; margin-bottom: 12px;">
+            Nếu trạm quá tải, báo trễ để khách trên ứng dụng nhận được thông báo:
+          </p>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary btn-sm" style="background:#fff;" onclick="extendWait(5)">+5 phút</button>
+            <button class="btn btn-secondary btn-sm" style="background:#fff;" onclick="extendWait(10)">+10 phút</button>
+            <button class="btn btn-secondary btn-sm" style="background:#fff;" onclick="extendWait(15)">+15 phút</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/data/mock-data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pages/kitchen-order-detail.js"></script>
+</body>
+</html>

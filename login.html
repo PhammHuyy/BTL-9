@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng Nhập | MenuMind F&B</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/pages/login.css">
+</head>
+<body style="background: #F1F5F9;">
+
+  <div class="login-wrapper">
+    <div class="login-box">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="font-size: 2.5rem; margin-bottom: 8px;">🍽️</div>
+        <h2 style="font-size: 1.5rem; color: var(--secondary);">Đăng Nhập MenuMind</h2>
+        <p style="font-size: 0.88rem; color: var(--text-muted);">
+          Chọn nhanh vai trò để trải nghiệm luồng nghiệp vụ tương ứng:
+        </p>
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">
+          ⚡ Đăng nhập nhanh 1 chạm (Khuyên dùng khi demo):
+        </div>
+
+        <div class="role-quick-card" onclick="quickLoginRole('diner')">
+          <div style="font-size: 1.4rem;">🍽️</div>
+          <div style="flex: 1;">
+            <div style="font-weight: 700; font-size: 0.9rem; color: var(--secondary);">Khách hàng tại bàn</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Xem menu, đặt món Bàn 04, AI Taste Recommender</div>
+          </div>
+          <span style="color: var(--primary); font-weight: bold;">→</span>
+        </div>
+
+        <div class="role-quick-card" onclick="quickLoginRole('kitchen')">
+          <div style="font-size: 1.4rem;">👨‍🍳</div>
+          <div style="flex: 1;">
+            <div style="font-weight: 700; font-size: 0.9rem; color: var(--secondary);">Bếp trưởng / Nhân viên bếp</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Bảng Kanban KDS, AI Kitchen Load Predictor</div>
+          </div>
+          <span style="color: var(--primary); font-weight: bold;">→</span>
+        </div>
+
+        <div class="role-quick-card" onclick="quickLoginRole('manager')">
+          <div style="font-size: 1.4rem;">📊</div>
+          <div style="flex: 1;">
+            <div style="font-weight: 700; font-size: 0.9rem; color: var(--secondary);">Quản lý nhà hàng</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">CRUD menu, Sales Insights, AI Feedback Extractor</div>
+          </div>
+          <span style="color: var(--primary); font-weight: bold;">→</span>
+        </div>
+
+        <div class="role-quick-card" onclick="quickLoginRole('admin')">
+          <div style="font-size: 1.4rem;">⚙️</div>
+          <div style="flex: 1;">
+            <div style="font-weight: 700; font-size: 0.9rem; color: var(--secondary);">Quản trị viên (Admin)</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Sơ đồ bàn, mã QR, nhân sự và cấu hình hệ thống</div>
+          </div>
+          <span style="color: var(--primary); font-weight: bold;">→</span>
+        </div>
+      </div>
+
+      <div style="text-align: center; position: relative; margin-bottom: 20px;">
+        <hr style="border: none; border-top: 1px solid var(--border-color);">
+        <span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #fff; padding: 0 10px; font-size: 0.8rem; color: var(--text-muted);">
+          HOẶC NHẬP TÀI KHOẢN
+        </span>
+      </div>
+
+      <form onsubmit="handleFormLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email hoặc Tên đăng nhập:</label>
+          <input type="text" id="loginEmail" class="form-control" value="tuan.admin@menumind.vn" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Mật khẩu:</label>
+          <input type="password" id="loginPassword" class="form-control" value="123456" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem;">
+          Đăng Nhập Vào Hệ Thống
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 18px;">
+        <a href="index.html" style="font-size: 0.85rem; color: var(--primary); text-decoration: underline;">
+          ← Quay lại Trang tổng quan dự án
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/data/mock-data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pages/login.js"></script>
+</body>
+</html>
