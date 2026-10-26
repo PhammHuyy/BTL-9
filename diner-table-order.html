@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đơn Của Bàn & Trạng Thái | MenuMind - Khách hàng</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/pages/diner-table-order.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="brand-logo">
+      <div class="logo-icon">🍽️</div>
+      <div>
+        <span>MenuMind</span>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Thực đơn & Đặt món tại bàn</div>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="diner-menu.html" class="nav-link">📖 Thêm món từ Thực đơn</a>
+      <a href="diner-table-order.html" class="nav-link active">📝 Đơn bàn của tôi</a>
+    </nav>
+
+    <div class="header-right">
+      <div class="table-tag">
+        📍 <span id="currentTableTitle">Bàn 04 (Khu A)</span>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="handleCallStaff()">🔔 Gọi phục vụ</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">Đơn Hàng Tại Bàn Của Bạn</h1>
+        <p class="page-subtitle">Kiểm tra giỏ hàng, gửi lệnh xuống bếp và theo dõi tiến trình nấu nướng trực tiếp</p>
+      </div>
+      <a href="diner-menu.html" class="btn btn-secondary btn-sm">+ Thêm món khác</a>
+    </div>
+
+    <section class="card" style="margin-bottom: 24px;" id="orderProgressCard">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div>
+          <span class="badge" style="background:#EEF2FF; color:#4338CA;" id="activeOrderIdBadge">Mã đơn: ORD-103</span>
+          <strong style="margin-left: 8px; font-size: 1.05rem;" id="activeOrderStatusText">Đang chuẩn bị & chế biến</strong>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+          ⏱️ Thời gian chờ ước tính: <strong style="color: var(--primary);" id="estimatedWaitTime">~ 12 phút</strong>
+        </div>
+      </div>
+
+      <div class="status-timeline">
+        <div class="timeline-step completed" id="step-pending">
+          <div class="step-icon">✓</div>
+          <div class="step-title">1. Đã nhận đơn</div>
+        </div>
+        <div class="timeline-step active" id="step-preparing">
+          <div class="step-icon">2</div>
+          <div class="step-title">2. Đang nấu</div>
+        </div>
+        <div class="timeline-step" id="step-ready">
+          <div class="step-icon">3</div>
+          <div class="step-title">3. Sẵn sàng lên món</div>
+        </div>
+        <div class="timeline-step" id="step-served">
+          <div class="step-icon">4</div>
+          <div class="step-title">4. Đã phục vụ</div>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-subtle); padding: 14px; border-radius: var(--radius-md);">
+        <strong style="font-size: 0.88rem; color: var(--secondary); display: block; margin-bottom: 8px;">
+          👨‍🍳 Các món bếp đang thực hiện cho bàn:
+        </strong>
+        <div id="kitchenCookingItemsList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      </div>
+    </section>
+
+    <div class="order-layout">
+      <div>
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-size: 1.15rem; color: var(--secondary);">
+              🛒 Món đang chọn (Chưa gửi xuống bếp)
+            </h3>
+            <span id="draftCountBadge" class="badge" style="background:#FEF3C7; color:#B45309;">2 món</span>
+          </div>
+
+          <div id="draftCartList"></div>
+
+          <div id="emptyDraftState" class="empty-state" style="display: none; padding: 24px;">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">🛒</div>
+            <div style="font-weight: 600; color: var(--secondary);">Chưa có món mới nào trong giỏ</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+              Quý khách có thể xem menu và chọn thêm món ngon bất cứ lúc nào.
+            </p>
+            <a href="diner-menu.html" class="btn btn-primary btn-sm">+ Mở Thực đơn</a>
+          </div>
+
+          <div id="sendOrderForm" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <h4 style="font-size: 0.95rem; margin-bottom: 12px; color: var(--secondary);">Thông tin bàn & Xác nhận gửi đơn:</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <label class="form-label" style="font-size: 0.8rem;">Tên người đại diện bàn:</label>
+                <input type="text" id="custNameInput" class="form-control" value="Khách Bàn 04" required>
+              </div>
+              <div>
+                <label class="form-label" style="font-size: 0.8rem;">Số điện thoại (Nhận tích điểm):</label>
+                <input type="tel" id="custPhoneInput" class="form-control" value="0900000004" required>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" style="width: 100%; padding: 12px;" onclick="handleSubmitDraftOrder()">
+              🚀 Gửi order này xuống bếp ngay
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3 style="font-size: 1.15rem; color: var(--secondary); margin-bottom: 16px;">
+            Hóa Đơn Tạm Tính Bàn 04
+          </h3>
+
+          <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; padding-bottom: 14px; border-bottom: 1px solid var(--border-color);">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Món đã phục vụ / đang nấu:</span>
+              <strong id="sentTotalAmount">569.000 ₫</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Món mới chưa gửi:</span>
+              <strong id="draftTotalAmount">399.000 ₫</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Thuế VAT (8%):</span>
+              <span id="vatAmount">77.440 ₫</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; color: #166534;">
+              <span>Ưu đãi thành viên (5%):</span>
+              <span id="discountAmount">- 48.400 ₫</span>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin: 18px 0;">
+            <span style="font-size: 1.1rem; font-weight: 700; color: var(--secondary);">Tổng thanh toán:</span>
+            <strong style="font-size: 1.5rem; color: var(--primary);" id="grandTotalAmount">997.040 ₫</strong>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn btn-success" style="width: 100%;" onclick="handleRequestBill()">
+              💳 Yêu cầu in hóa đơn & Thanh toán
+            </button>
+            <button class="btn btn-secondary" style="width: 100%;" onclick="openFeedbackModal()">
+              ⭐ Gửi đánh giá món ăn & dịch vụ
+            </button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 16px; background: #FAF5FF; border-color: #E9D5FF;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <span>🤖</span>
+            <strong style="color: #6B21A8; font-size: 0.9rem;">Hỗ trợ thông minh MenuMind</strong>
+          </div>
+          <p style="font-size: 0.82rem; color: #581C87;">
+            Bếp trưởng cam kết thời gian lên món trong 15-20 phút. Nếu quá thời gian này, hệ thống sẽ tự động phát cảnh báo ưu tiên tới quản lý ca!
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL FEEDBACK -->
+  <div class="modal-backdrop" id="feedbackModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title">Gửi Đánh Giá Của Bạn</h3>
+        <button onclick="closeModal('feedbackModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Tên của bạn:</label>
+          <input type="text" id="fbCustName" class="form-control" value="Khách Bàn 04" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bạn chấm mấy sao cho bữa ăn hôm nay?</label>
+          <select id="fbRating" class="form-control">
+            <option value="5">⭐⭐⭐⭐⭐ Tuyệt vời (5 sao)</option>
+            <option value="4">⭐⭐⭐⭐ Rất ngon (4 sao)</option>
+            <option value="3">⭐⭐⭐ Bình thường (3 sao)</option>
+            <option value="2">⭐⭐ Chưa hài lòng (2 sao)</option>
+            <option value="1">⭐ Thất vọng (1 sao)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Chủ đề góp ý chính:</label>
+          <select id="fbTheme" class="form-control">
+            <option value="Chất lượng món">Chất lượng & Hương vị món ăn</option>
+            <option value="Thời gian chờ">Thời gian chờ lên món</option>
+            <option value="Dịch vụ & Thái độ">Thái độ nhân viên phục vụ</option>
+            <option value="Giá cả & Khẩu phần">Giá cả & Định lượng</option>
+            <option value="Không gian quán">Không gian & Vệ sinh</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ý kiến chi tiết:</label>
+          <textarea id="fbComment" class="form-control" rows="3" placeholder="Chia sẻ cảm nhận về món ăn, tốc độ phục vụ..." required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('feedbackModal')">Hủy</button>
+        <button class="btn btn-primary" onclick="submitCustomerFeedback()">Gửi đánh giá</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/data/mock-data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pages/diner-table-order.js"></script>
+</body>
+</html>

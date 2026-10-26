@@ -1,0 +1,20 @@
+/* manager-feedback-center.css - Styles rieng cho trang manager-feedback-center */
+
+.sentiment-bar {
+      display: flex;
+      height: 12px;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin: 10px 0;
+    }
+    .sentiment-pos { background: #10B981; }
+    .sentiment-neu { background: #F59E0B; }
+    .sentiment-neg { background: #EF4444; }
+    .feedback-item {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-sm);
+    }

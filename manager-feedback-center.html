@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trung Tâm Phản Hồi & AI Phân Cụm | MenuMind - Quản lý</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/pages/manager-feedback-center.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="brand-logo">
+      <div class="logo-icon" style="background: linear-gradient(135deg, #0284C7, #0369A1);">📊</div>
+      <div>
+        <span>MenuMind Manager</span>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Cổng Quản lý & Vận hành F&B</div>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="manager-menu-management.html" class="nav-link">📖 Quản lý Thực đơn</a>
+      <a href="manager-sales-insights.html" class="nav-link">📈 Báo cáo Doanh thu</a>
+      <a href="manager-feedback-center.html" class="nav-link active">💬 Trung tâm Phản hồi (AI-3)</a>
+    </nav>
+
+    <div class="header-right">
+      <button class="btn btn-ai btn-sm" onclick="runAiFeedbackExtractor()">
+        ✨ Kích hoạt AI Feedback Theme Extractor
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">Trung Tâm Đánh Giá & Phản Hồi Thực Khách</h1>
+        <p class="page-subtitle">Lắng nghe ý kiến của khách tại bàn và trích xuất chủ đề bằng AI để cải thiện trải nghiệm ẩm thực</p>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openAddFeedbackModal()">+ Thêm đánh giá mẫu</button>
+    </div>
+
+    <!-- AI-3 SECTION -->
+    <section class="ai-card" id="aiFeedbackSection">
+      <div class="ai-card-header">
+        <div class="ai-badge">🤖 AI-3 • Feedback Theme Extractor</div>
+        <span style="font-size: 0.8rem; color: #6D28D9; font-weight: 600;">MenuMind NLP Theme Engine</span>
+      </div>
+
+      <div id="aiFbIntro">
+        <h3 style="color: #4C1D95; font-size: 1.15rem; margin-bottom: 6px;">
+          Tự động phân nhóm chủ đề & đo lường độ hài lòng bằng AI
+        </h3>
+        <p style="font-size: 0.88rem; color: #5B21B6; margin-bottom: 14px;">
+          Thay vì đọc từng bình luận rời rạc, AI sẽ quét toàn bộ đánh giá của khách hàng, trích xuất các chủ đề chính (Chất lượng món, Thời gian chờ, Phục vụ, Giá cả) và tự động nhận diện các vấn đề cần khắc phục gấp trong ca trực.
+        </p>
+
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+          <input type="checkbox" id="aiFbFailureCheck" onchange="toggleAiFbFailure(this.checked)">
+          <label for="aiFbFailureCheck" style="font-size: 0.8rem; color: #64748B; cursor: pointer;">
+            Bật mô phỏng AI thất bại / Không đủ dữ liệu phân cụm (Dành cho Giảng viên kiểm tra)
+          </label>
+        </div>
+
+        <button class="btn btn-ai" onclick="runAiFeedbackExtractor()">
+          🧠 Bắt đầu trích xuất chủ đề bằng AI
+        </button>
+      </div>
+
+      <div id="aiFbLoading" style="display: none; padding: 24px; text-align: center;">
+        <div style="font-size: 2.2rem; animation: spin 1.5s linear infinite; margin-bottom: 10px;">🔍</div>
+        <h4 style="color: #4338CA; margin-bottom: 6px;">AI đang xử lý ngôn ngữ tự nhiên (NLP)...</h4>
+        <p style="font-size: 0.82rem; color: #6B7280; max-width: 450px; margin: 0 auto 14px;">
+          Đang bóc tách từ khóa cảm xúc, phân cụm ngữ nghĩa từ các đánh giá thực khách...
+        </p>
+        <div style="height: 6px; background: #E0E7FF; border-radius: 999px; overflow: hidden; width: 60%; margin: 0 auto;">
+          <div class="skeleton-loader" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <div id="aiFbResult" style="display: none;">
+        <div style="background: #FFFFFF; border-radius: var(--radius-md); padding: 18px; border: 1px solid #C4B5FD; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+            <strong style="color: #4338CA; font-size: 1.05rem;">
+              🎯 Kết Quả Phân Cụm Ý Kiến Khách Hàng
+            </strong>
+            <span class="badge" style="background:#DCFCE7; color:#166534;" id="aiSentimentBadge">82% Hài lòng</span>
+          </div>
+
+          <div class="sentiment-bar">
+            <div class="sentiment-pos" id="barPos" style="width: 80%;" title="Tích cực: 80%"></div>
+            <div class="sentiment-neu" id="barNeu" style="width: 15%;" title="Trung lập: 15%"></div>
+            <div class="sentiment-neg" id="barNeg" style="width: 5%;" title="Tiêu cực: 5%"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">
+            <span style="color: #10B981;">● Tích cực: <strong id="txtPos">80%</strong></span>
+            <span style="color: #F59E0B;">● Trung lập: <strong id="txtNeu">15%</strong></span>
+            <span style="color: #EF4444;">● Cần cải thiện: <strong id="txtNeg">5%</strong></span>
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--secondary);">Chủ đề nổi bật được phân loại:</span>
+            <div id="aiThemesBadges" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;"></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+            <div style="background:#ECFDF5; border-left:4px solid #10B981; padding:10px 14px; border-radius:0 8px 8px 0; font-size:0.85rem; color:#065F46;">
+              <strong>👍 Điểm thực khách hài lòng nhất:</strong>
+              <div id="aiTopPositiveText" style="margin-top:2px;"></div>
+            </div>
+            <div style="background:#FFFBEB; border-left:4px solid #F59E0B; padding:10px 14px; border-radius:0 8px 8px 0; font-size:0.85rem; color:#92400E;">
+              <strong>⚠️ Vấn đề cần khắc phục:</strong>
+              <div id="aiTopIssueText" style="margin-top:2px;"></div>
+            </div>
+          </div>
+
+          <div class="ai-reason-box">
+            <strong>💡 Khuyến nghị hành động từ AI:</strong>
+            <p id="aiActionSugText" style="margin-top: 4px; font-size: 0.85rem;"></p>
+          </div>
+
+          <div class="ai-actions-bar">
+            <button class="btn btn-primary btn-sm" onclick="applyThemeFilter('Thời gian chờ')">
+              🔍 Lọc xem các đánh giá 'Thời gian chờ'
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="saveFeedbackReport()">
+              💾 Lưu phân tích vào báo cáo tuần
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="dismissAiFb()">
+              Đóng kết quả
+            </button>
+            <button class="btn btn-sm btn-secondary" onclick="runAiFeedbackExtractor()">
+              🔄 Phân tích lại
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="aiFbError" style="display: none; padding: 20px; text-align: center;">
+        <div style="font-size: 2.2rem; margin-bottom: 8px;">⚠️</div>
+        <h4 style="color: #991B1B; margin-bottom: 6px;">Không thể trích xuất chủ đề phản hồi</h4>
+        <p id="aiFbErrorMsg" style="font-size: 0.85rem; color: #7F1D1D; margin-bottom: 14px;"></p>
+        <button class="btn btn-secondary btn-sm" onclick="resetAiFb()">Thử lại</button>
+      </div>
+    </section>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+        <span style="font-weight: 600; font-size: 0.9rem; color: var(--secondary);">Lọc theo chủ đề:</span>
+        <button class="btn btn-sm btn-primary" id="btnThemeAll" onclick="filterByTheme('all')">Tất cả chủ đề</button>
+        <button class="btn btn-sm btn-secondary" id="btnThemeFood" onclick="filterByTheme('Chất lượng món')">Chất lượng món</button>
+        <button class="btn btn-sm btn-secondary" id="btnThemeWait" onclick="filterByTheme('Thời gian chờ')">Thời gian chờ</button>
+        <button class="btn btn-sm btn-secondary" id="btnThemeService" onclick="filterByTheme('Dịch vụ & Thái độ')">Thái độ phục vụ</button>
+        <button class="btn btn-sm btn-secondary" id="btnThemePrice" onclick="filterByTheme('Giá cả & Khẩu phần')">Giá cả</button>
+      </div>
+
+      <div style="font-size: 0.85rem; color: var(--text-muted);">
+        Hiển thị: <strong id="feedbackCountDisplay" style="color: var(--secondary);">5 đánh giá</strong>
+      </div>
+    </div>
+
+    <div id="feedbackListContainer"></div>
+  </main>
+
+  <!-- MODAL REPLY -->
+  <div class="modal-backdrop" id="replyModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title">Trả Lời Đánh Giá Của Khách Hàng</h3>
+        <button onclick="closeModal('replyModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="replyTargetId">
+        <div style="background: var(--bg-subtle); padding: 12px; border-radius: var(--radius-md); margin-bottom: 14px;">
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Ý kiến của khách:</div>
+          <p id="replyCustomerComment" style="font-size: 0.9rem; font-weight: 500; color: var(--secondary); margin-top: 4px;"></p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nội dung phản hồi từ Quản lý:</label>
+          <textarea id="replyTextarea" class="form-control" rows="4" placeholder="Cảm ơn quý khách đã ghé thăm nhà hàng..." required></textarea>
+        </div>
+
+        <button type="button" class="btn btn-ai btn-sm" onclick="generateAiReplyTemplate()">
+          ✨ Gợi ý câu trả lời lịch thiệp bằng AI
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('replyModal')">Hủy</button>
+        <button class="btn btn-primary" onclick="submitReply()">Gửi phản hồi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ADD FEEDBACK -->
+  <div class="modal-backdrop" id="addFeedbackModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title">Thêm Đánh Giá Thực Khách Mẫu</h3>
+        <button onclick="closeModal('addFeedbackModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Tên khách hàng:</label>
+          <input type="text" id="newFbName" class="form-control" value="Khách dùng thử" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bàn:</label>
+          <input type="text" id="newFbTable" class="form-control" value="Bàn 04" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Điểm số (sao):</label>
+          <select id="newFbRating" class="form-control">
+            <option value="5">5 sao - Rất hài lòng</option>
+            <option value="4">4 sao - Tốt</option>
+            <option value="3">3 sao - Bình thường</option>
+            <option value="2">2 sao - Kém</option>
+            <option value="1">1 sao - Thất vọng</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Chủ đề:</label>
+          <select id="newFbTheme" class="form-control">
+            <option value="Chất lượng món">Chất lượng món</option>
+            <option value="Thời gian chờ">Thời gian chờ</option>
+            <option value="Dịch vụ & Thái độ">Dịch vụ & Thái độ</option>
+            <option value="Giá cả & Khẩu phần">Giá cả & Khẩu phần</option>
+            <option value="Không gian quán">Không gian quán</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nội dung nhận xét:</label>
+          <textarea id="newFbComment" class="form-control" rows="3" required placeholder="Nhập cảm nhận của khách..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('addFeedbackModal')">Hủy</button>
+        <button class="btn btn-primary" onclick="submitNewSampleFeedback()">Lưu đánh giá</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/data/mock-data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/ai-engine.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pages/manager-feedback-center.js"></script>
+</body>
+</html>
