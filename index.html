@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MenuMind – Thực Đơn Thông Minh & Điều Phối Đơn Hàng | BTL-09 CSE122</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/pages/index.css">
+</head>
+<body>
+
+  <main class="container" style="max-width: 1240px; padding-top: 10px;">
+    <section class="hero-banner">
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); padding: 6px 16px; border-radius: var(--radius-full); font-size: 0.85rem; margin-bottom: 16px;">
+        <span>🎓</span>
+        <span>HỌC PHẦN: PHÁT TRIỂN ỨNG DỤNG WEB CƠ BẢN – CSE122</span>
+      </div>
+      <h1 style="font-size: 2.6rem; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px;">
+        BTL-09 – MenuMind
+      </h1>
+      <p style="font-size: 1.25rem; color: #E0E7FF; max-width: 800px; margin: 0 auto 24px; line-height: 1.6;">
+        Hệ thống Thực đơn thông minh & Điều phối đơn hàng F&B đa vai trò, tích hợp LocalStorage CRUD đồng bộ và 3 mô phỏng AI chuyên sâu.
+      </p>
+
+      <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+        <a href="diner-menu.html" class="btn btn-primary" style="background:#F97316; border:none; padding:12px 24px; font-size:1.05rem;">
+          🍽️ Trải nghiệm vai Khách hàng
+        </a>
+        <a href="kitchen-board.html" class="btn btn-secondary" style="background:rgba(255,255,255,0.15); color:#fff; border-color:rgba(255,255,255,0.25); padding:12px 24px; font-size:1.05rem;">
+          👨‍🍳 Màn hình Điều phối Bếp (KDS)
+        </a>
+        <button class="btn btn-ai" onclick="handleResetData()" style="padding:12px 24px; font-size:1.05rem;">
+          🔄 Nạp lại Dữ liệu mẫu (Reset Data)
+        </button>
+      </div>
+    </section>
+
+    <div style="margin-bottom: 40px;">
+      <h2 style="font-size: 1.6rem; color: var(--secondary); margin-bottom: 6px;">
+        4 Vai Trò Vận Hành Trong Hệ Thống
+      </h2>
+      <p style="color: var(--text-muted); margin-bottom: 20px;">
+        Mỗi vai trò được xây dựng đầy đủ ít nhất 3 màn hình nghiệp vụ độc lập theo quy chuẩn BTL-09:
+      </p>
+
+      <div class="grid-4">
+        <div class="role-hub-card" style="border-top: 4px solid #D9480F;">
+          <div style="font-size: 2.2rem; margin-bottom: 10px;">🍽️</div>
+          <h3 style="font-size: 1.2rem; color: var(--secondary); margin-bottom: 6px;">Khách Hàng (Diner)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; flex: 1;">
+            Xem menu, tìm kiếm, lọc theo khẩu vị, tùy biến món ăn và theo dõi trạng thái chế biến theo thời gian thực.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <a href="diner-menu.html" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              1. 📖 Thực đơn (Menu)
+            </a>
+            <a href="diner-dish-detail.html?id=dish-01" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              2. 🔍 Chi tiết món (Dish Detail)
+            </a>
+            <a href="diner-table-order.html" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              3. 📝 Đơn của bàn (Table Order)
+            </a>
+          </div>
+        </div>
+
+        <div class="role-hub-card" style="border-top: 4px solid #0284C7;">
+          <div style="font-size: 2.2rem; margin-bottom: 10px;">👨‍🍳</div>
+          <h3 style="font-size: 1.2rem; color: var(--secondary); margin-bottom: 6px;">Nhân Viên Bếp (Kitchen)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; flex: 1;">
+            Tiếp nhận order theo trạm, kiểm tra checklist nguyên liệu và điều phối các đơn hàng theo luồng trạng thái Kanban.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <a href="kitchen-board.html" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              4. 📋 Bảng điều phối (Kitchen Board)
+            </a>
+            <a href="kitchen-order-detail.html?orderId=ORD-101" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              5. 🍳 Chi tiết phiếu (Order Detail)
+            </a>
+            <a href="kitchen-wait-time-alerts.html" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              6. ⏱️ Cảnh báo thời gian (Wait Alerts)
+            </a>
+          </div>
+        </div>
+
+        <div class="role-hub-card" style="border-top: 4px solid #10B981;">
+          <div style="font-size: 2.2rem; margin-bottom: 10px;">📊</div>
+          <h3 style="font-size: 1.2rem; color: var(--secondary); margin-bottom: 6px;">Quản Lý (Manager)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; flex: 1;">
+            Toàn quyền CRUD menu món ăn, theo dõi biểu đồ doanh thu theo giờ và phân tích phản hồi của thực khách.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <a href="manager-menu-management.html" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              7. 📖 Quản lý menu (Menu Management)
+            </a>
+            <a href="manager-sales-insights.html" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              8. 📈 Báo cáo doanh số (Sales Insights)
+            </a>
+            <a href="manager-feedback-center.html" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              9. 💬 Trung tâm phản hồi (Feedback)
+            </a>
+          </div>
+        </div>
+
+        <div class="role-hub-card" style="border-top: 4px solid #6366F1;">
+          <div style="font-size: 2.2rem; margin-bottom: 10px;">⚙️</div>
+          <h3 style="font-size: 1.2rem; color: var(--secondary); margin-bottom: 6px;">Quản Trị Viên (Admin)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; flex: 1;">
+            Quản trị sơ đồ bàn ăn, mã QR quét món, quản lý tài khoản nhân sự và cấu hình kho dữ liệu LocalStorage.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <a href="admin-table-management.html" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              10. 🪑 Quản lý bàn (Table Management)
+            </a>
+            <a href="admin-user-management.html" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              11. 👥 Quản lý tài khoản (User Mgmt)
+            </a>
+            <a href="admin-settings.html" class="btn btn-secondary btn-sm" style="text-align: left; justify-content: flex-start;">
+              12. ⚙️ Cài đặt hệ thống (Settings)
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI SHOWCASE -->
+    <section class="card" style="margin-bottom: 40px; background: linear-gradient(135deg, #FAF5FF 0%, #F3E8FF 100%); border-color: #D8B4FE;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <span class="ai-badge">🤖 3 TRẢI NGHIỆM AI BẮT BUỘC ĐÃ HOÀN TẤT</span>
+          <h2 style="font-size: 1.4rem; color: #581C87; margin-top: 6px;">
+            Hiện Thực Đầy Đủ Chuẩn Quy Trình AI & Trạng Thái Thất Bại
+          </h2>
+        </div>
+        <span style="font-size: 0.85rem; color: #7E22CE; font-weight: 600;">
+          Chuẩn: Nhập → Đang xử lý → Kết quả → Giải thích → Quyết định của người dùng
+        </span>
+      </div>
+
+      <div class="grid-3">
+        <div style="background: #fff; padding: 18px; border-radius: var(--radius-md); border: 1px solid #E9D5FF;">
+          <strong style="color: #6B21A8; font-size: 1.05rem; display: block; margin-bottom: 6px;">
+            AI-1: Taste Recommender
+          </strong>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+            Gợi ý món ăn thông minh theo khẩu vị (cay/ngọt/thanh đạm), dị ứng và ngân sách. Kèm lý do giải thích chi tiết.
+          </p>
+          <a href="diner-menu.html" class="btn btn-ai btn-sm" style="width: 100%;">Thử nghiệm tại Thực đơn</a>
+        </div>
+
+        <div style="background: #fff; padding: 18px; border-radius: var(--radius-md); border: 1px solid #E9D5FF;">
+          <strong style="color: #6B21A8; font-size: 1.05rem; display: block; margin-bottom: 6px;">
+            AI-2: Kitchen Load Predictor
+          </strong>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+            Dự báo thời gian chờ dựa trên công suất 4 trạm nấu, phát hiện điểm nghẽn và đưa ra phương án luân chuyển nhân sự.
+          </p>
+          <a href="kitchen-wait-time-alerts.html" class="btn btn-ai btn-sm" style="width: 100%;">Thử nghiệm tại Bếp</a>
+        </div>
+
+        <div style="background: #fff; padding: 18px; border-radius: var(--radius-md); border: 1px solid #E9D5FF;">
+          <strong style="color: #6B21A8; font-size: 1.05rem; display: block; margin-bottom: 6px;">
+            AI-3: Feedback Theme Extractor
+          </strong>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+            Phân cụm tự động ý kiến khách hàng bằng NLP, đo lường tỷ lệ cảm xúc và đề xuất giải pháp cải thiện hương vị.
+          </p>
+          <a href="manager-feedback-center.html" class="btn btn-ai btn-sm" style="width: 100%;">Thử nghiệm tại Quản lý</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTORY TABLE -->
+    <section class="card" style="margin-bottom: 40px;">
+      <h2 style="font-size: 1.35rem; color: var(--secondary); margin-bottom: 6px;">
+        📋 Bảng Kiểm Kê 12 Giao Diện Nền Tảng Bắt Buộc (Mục 8)
+      </h2>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+        Đã hiện thực hoàn chỉnh 100% mã nguồn, liên kết trực tiếp, hỗ trợ Responsive và đầy đủ thao tác CRUD / Trạng thái:
+      </p>
+
+      <div style="overflow-x: auto;">
+        <table class="inventory-table">
+          <thead>
+            <tr>
+              <th style="width: 40px;">#</th>
+              <th>Vai trò</th>
+              <th>Giao diện</th>
+              <th>Tệp HTML</th>
+              <th>Thao tác</th>
+              <th>Tương tác chính</th>
+              <th>Trải nghiệm AI</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><strong>Khách hàng</strong></td>
+              <td><a href="diner-menu.html" style="color:var(--primary); font-weight:600;">Menu</a></td>
+              <td><code>diner-menu.html</code></td>
+              <td><span class="badge" style="background:#E0F2FE; color:#0369A1;">R</span></td>
+              <td>Tìm kiếm, lọc danh mục, giỏ hàng nổi</td>
+              <td><span class="badge" style="background:#EDE9FE; color:#6D28D9;">AI-1 (Gợi ý gu)</span></td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><strong>Khách hàng</strong></td>
+              <td><a href="diner-dish-detail.html?id=dish-01" style="color:var(--primary); font-weight:600;">Dish Detail</a></td>
+              <td><code>diner-dish-detail.html</code></td>
+              <td><span class="badge" style="background:#FEF3C7; color:#B45309;">C / R / U</span></td>
+              <td>Tùy chọn kích cỡ, độ cay, ghi chú đầu bếp</td>
+              <td>Gợi ý món ăn kèm</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><strong>Khách hàng</strong></td>
+              <td><a href="diner-table-order.html" style="color:var(--primary); font-weight:600;">Table Order</a></td>
+              <td><code>diner-table-order.html</code></td>
+              <td><span class="badge" style="background:#FFEDD5; color:#C2410C;">C/R/U/D</span></td>
+              <td>Gửi order bếp, timeline nấu, tính tiền</td>
+              <td>Cảnh báo trễ tự động</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><strong>Nhân viên bếp</strong></td>
+              <td><a href="kitchen-board.html" style="color:var(--primary); font-weight:600;">Kitchen Board</a></td>
+              <td><code>kitchen-board.html</code></td>
+              <td><span class="badge" style="background:#E0F2FE; color:#0369A1;">R / U</span></td>
+              <td>Kanban 4 cột, lọc theo trạm, rush mode</td>
+              <td>--</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><strong>Nhân viên bếp</strong></td>
+              <td><a href="kitchen-order-detail.html?orderId=ORD-101" style="color:var(--primary); font-weight:600;">Order Detail</a></td>
+              <td><code>kitchen-order-detail.html</code></td>
+              <td><span class="badge" style="background:#FEF3C7; color:#B45309;">C / R / U</span></td>
+              <td>Cập nhật trạng thái từng món, checklist nguyên liệu</td>
+              <td>Ghi chú nội bộ bếp</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><strong>Nhân viên bếp</strong></td>
+              <td><a href="kitchen-wait-time-alerts.html" style="color:var(--primary); font-weight:600;">Wait Time Alerts</a></td>
+              <td><code>kitchen-wait-time-alerts.html</code></td>
+              <td><span class="badge" style="background:#FFEDD5; color:#C2410C;">C/R/U/D</span></td>
+              <td>Cảnh báo bàn chờ > 20m, giải tỏa nghẽn</td>
+              <td><span class="badge" style="background:#EDE9FE; color:#6D28D9;">AI-2 (Tải bếp)</span></td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><strong>Quản lý</strong></td>
+              <td><a href="manager-menu-management.html" style="color:var(--primary); font-weight:600;">Menu Management</a></td>
+              <td><code>manager-menu-management.html</code></td>
+              <td><span class="badge" style="background:#FFEDD5; color:#C2410C;">C/R/U/D</span></td>
+              <td>CRUD món ăn, công tắc còn/hết món, export JSON</td>
+              <td>--</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><strong>Quản lý</strong></td>
+              <td><a href="manager-sales-insights.html" style="color:var(--primary); font-weight:600;">Sales Insights</a></td>
+              <td><code>manager-sales-insights.html</code></td>
+              <td><span class="badge" style="background:#FEF3C7; color:#B45309;">C / R / U</span></td>
+              <td>KPIs doanh thu, biểu đồ theo giờ, top món</td>
+              <td>Hiệu suất 4 trạm</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><strong>Quản lý</strong></td>
+              <td><a href="manager-feedback-center.html" style="color:var(--primary); font-weight:600;">Feedback Center</a></td>
+              <td><code>manager-feedback-center.html</code></td>
+              <td><span class="badge" style="background:#FFEDD5; color:#C2410C;">C/R/U/D</span></td>
+              <td>Trả lời khách, lọc theo sao/chủ đề, xóa review</td>
+              <td><span class="badge" style="background:#EDE9FE; color:#6D28D9;">AI-3 (Trích chủ đề)</span></td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><strong>Quản trị viên</strong></td>
+              <td><a href="admin-table-management.html" style="color:var(--primary); font-weight:600;">Table Management</a></td>
+              <td><code>admin-table-management.html</code></td>
+              <td><span class="badge" style="background:#FFEDD5; color:#C2410C;">C/R/U/D</span></td>
+              <td>Sơ đồ bàn, đổi trạng thái trống/có khách, QR bàn</td>
+              <td>Tạo QR tự động</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+            <tr>
+              <td>11</td>
+              <td><strong>Quản trị viên</strong></td>
+              <td><a href="admin-user-management.html" style="color:var(--primary); font-weight:600;">User Management</a></td>
+              <td><code>admin-user-management.html</code></td>
+              <td><span class="badge" style="background:#FFEDD5; color:#C2410C;">C/R/U/D</span></td>
+              <td>CRUD tài khoản, phân quyền Admin/Quản lý/Bếp</td>
+              <td>--</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+            <tr>
+              <td>12</td>
+              <td><strong>Quản trị viên</strong></td>
+              <td><a href="admin-settings.html" style="color:var(--primary); font-weight:600;">Settings</a></td>
+              <td><code>admin-settings.html</code></td>
+              <td><span class="badge" style="background:#FFEDD5; color:#C2410C;">C/R/U/D</span></td>
+              <td>Cấu hình nhà hàng, VAT, tham số AI, Reset Mock Data</td>
+              <td>Mô hình Gemini 3.8</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">✓ DONE</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer style="text-align: center; padding: 24px 0; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.88rem;">
+      <p>MenuMind – Thực đơn thông minh & Điều phối đơn hàng | Đề tài BTL-09 CSE122</p>
+      <p style="margin-top: 4px;">Xây dựng hoàn chỉnh với HTML5 ngữ nghĩa, CSS3 Flex/Grid, Vanilla JavaScript và LocalStorage.</p>
+    </footer>
+  </main>
+
+  <script src="assets/data/mock-data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pages/index.js"></script>
+</body>
+</html>

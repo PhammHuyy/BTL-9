@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Thực đơn Thông minh | MenuMind - Khách hàng</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/pages/diner-menu.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="brand-logo">
+      <div class="logo-icon">🍽️</div>
+      <div>
+        <span>MenuMind</span>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Thực đơn & Đặt món tại bàn</div>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="diner-menu.html" class="nav-link active">📖 Thực đơn</a>
+      <a href="diner-table-order.html" class="nav-link">📝 Đơn của bàn (<span id="navCartCount">0</span>)</a>
+    </nav>
+
+    <div class="header-right">
+      <div class="table-tag" id="currentTableDisplay">
+        📍 <span>Bàn 04 (Khu A)</span>
+      </div>
+      <a href="diner-table-order.html" class="btn btn-primary btn-sm">Xem đơn & Gọi món</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">Khám phá Thực đơn Ẩm thực</h1>
+        <p class="page-subtitle">Chọn món yêu thích hoặc để trợ lý AI gợi ý món ăn chuẩn vị cho bạn</p>
+      </div>
+
+      <button class="btn btn-ai" onclick="openAITasteModal()">
+        ✨ AI Taste Recommender (Gợi ý theo khẩu vị)
+      </button>
+    </div>
+
+    <section class="ai-card" id="aiQuickPromo">
+      <div class="ai-card-header">
+        <div class="ai-badge">🤖 AI-1 • Taste Recommender</div>
+        <span style="font-size: 0.8rem; color: #6D28D9; font-weight: 600;">Hỗ trợ cá nhân hóa 100%</span>
+      </div>
+      <h3 style="color: #4C1D95; font-size: 1.15rem; margin-bottom: 6px;">Bạn phân vân chưa biết ăn gì hôm nay?</h3>
+      <p style="font-size: 0.9rem; color: #5B21B6; margin-bottom: 14px;">
+        Chỉ cần chọn khẩu vị (cay nồng, thanh đạm, chay...), ngân sách và các lưu ý dị ứng, MenuMind AI sẽ đề xuất combo chuẩn gu trong 1 giây kèm giải thích chi tiết!
+      </p>
+      <button class="btn btn-ai btn-sm" onclick="openAITasteModal()">Khám phá ngay với AI</button>
+    </section>
+
+    <div class="search-bar-row">
+      <div class="search-input-wrap">
+        <input type="text" id="searchInput" class="form-control" placeholder="🔍 Tìm tên món ăn, nguyên liệu (bò wagyu, nấm, sốt tiêu...)" oninput="filterDishes()">
+      </div>
+      <select id="dietFilter" class="form-control" style="width: auto; min-width: 170px;" onchange="filterDishes()">
+        <option value="all">Mọi chế độ ăn</option>
+        <option value="vegetarian">Chỉ món Chay</option>
+        <option value="bestseller">Món Bán chạy nhất</option>
+        <option value="non_spicy">Không cay</option>
+      </select>
+      <select id="sortFilter" class="form-control" style="width: auto; min-width: 160px;" onchange="filterDishes()">
+        <option value="default">Sắp xếp: Mặc định</option>
+        <option value="price_asc">Giá: Thấp đến Cao</option>
+        <option value="price_desc">Giá: Cao đến Thấp</option>
+        <option value="rating">Đánh giá cao nhất</option>
+      </select>
+    </div>
+
+    <div class="menu-filters" id="categoryChips">
+      <button class="filter-chip active" data-category="all" onclick="selectCategory('all')">Tất cả món</button>
+      <button class="filter-chip" data-category="appetizer" onclick="selectCategory('appetizer')">🥗 Khai vị</button>
+      <button class="filter-chip" data-category="main" onclick="selectCategory('main')">🥩 Món chính</button>
+      <button class="filter-chip" data-category="hotpot" onclick="selectCategory('hotpot')">🍲 Lẩu & Nướng</button>
+      <button class="filter-chip" data-category="dessert" onclick="selectCategory('dessert')">🍰 Tráng miệng</button>
+      <button class="filter-chip" data-category="drink" onclick="selectCategory('drink')">🍹 Đồ uống</button>
+    </div>
+
+    <div id="dishGrid" class="grid-3"></div>
+
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <div class="empty-icon">🍽️</div>
+      <h3 class="empty-title">Không tìm thấy món ăn phù hợp</h3>
+      <p class="empty-desc">Hãy thử đổi từ khóa tìm kiếm hoặc bỏ bớt các bộ lọc chế độ ăn.</p>
+      <button class="btn btn-secondary btn-sm" onclick="resetFilters()">Đặt lại bộ lọc</button>
+    </div>
+  </main>
+
+  <a href="diner-table-order.html" class="floating-cart-btn" id="floatingCart">
+    <span>🛒 Bàn của bạn</span>
+    <span id="floatingCartCount" style="background:#fff; color:var(--primary); padding:2px 8px; border-radius:999px; font-size:0.85rem;">0</span>
+  </a>
+
+  <!-- MODAL AI-1 -->
+  <div class="modal-backdrop" id="aiTasteModal">
+    <div class="modal-window" style="max-width: 680px;">
+      <div class="modal-header" style="background: linear-gradient(135deg, #EEF2FF, #E0E7FF);">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.4rem;">🤖</span>
+          <h3 class="modal-title" style="color: #3730A3;">AI Taste Recommender</h3>
+        </div>
+        <button onclick="closeModal('aiTasteModal')" style="font-size: 1.4rem; color: #6B7280;">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="aiFormStep">
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;">
+            Hãy cho AI biết gu ẩm thực của bạn để nhận thực đơn gợi ý được tính toán chuẩn xác:
+          </p>
+
+          <div class="form-group">
+            <label class="form-label">1. Khẩu vị mong muốn hôm nay:</label>
+            <select id="aiFlavorInput" class="form-control">
+              <option value="balanced">Hài hòa, tròn vị (Khuyên dùng)</option>
+              <option value="spicy">Cay nồng đậm vị</option>
+              <option value="light">Thanh đạm, ít calo</option>
+              <option value="vegetarian">Chay thanh tịnh 100%</option>
+              <option value="meat_lover">Nhiều thịt bò & nướng thơm mọng</option>
+            </select>
+          </div>
+
+          <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+            <div class="form-group" style="flex: 1; min-width: 200px;">
+              <label class="form-label">2. Ngân sách dự kiến:</label>
+              <select id="aiBudgetInput" class="form-control">
+                <option value="300000">Dưới 300.000 ₫</option>
+                <option value="500000" selected>Dưới 500.000 ₫</option>
+                <option value="800000">Dưới 800.000 ₫ (Thoải mái)</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex: 1; min-width: 200px;">
+              <label class="form-label">3. Số người dùng bữa:</label>
+              <input type="number" id="aiGroupSizeInput" class="form-control" value="2" min="1" max="12">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">4. Cảnh báo dị ứng hoặc kiêng khem:</label>
+            <select id="aiAllergyInput" class="form-control">
+              <option value="none">Không có dị ứng</option>
+              <option value="seafood">Kiêng Hải sản (Tôm, Cua, Cá...)</option>
+              <option value="dairy">Dị ứng Sữa & Bơ động vật</option>
+              <option value="gluten">Dị ứng Gluten (Không bột mì)</option>
+            </select>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 8px; background: #F8FAFC; border-radius: var(--radius-sm); border: 1px dashed #CBD5E1;">
+            <input type="checkbox" id="aiFailureToggle" onchange="toggleAiSimFailure(this.checked)">
+            <label for="aiFailureToggle" style="font-size: 0.8rem; color: #64748B; cursor: pointer;">
+              Mô phỏng trường hợp AI thất bại / không đủ dữ liệu (Dành cho Giảng viên kiểm tra)
+            </label>
+          </div>
+        </div>
+
+        <div id="aiLoadingStep" style="display: none; text-align: center; padding: 40px 20px;">
+          <div style="font-size: 2.5rem; margin-bottom: 12px; animation: spin 2s linear infinite;">🧠</div>
+          <h4 style="color: #4338CA; margin-bottom: 6px;">MenuMind AI đang phân tích khẩu vị...</h4>
+          <p style="font-size: 0.85rem; color: #6B7280; max-width: 400px; margin: 0 auto 16px;">
+            Đang đối chiếu thành phần, gia vị, hàm lượng calo và đánh giá của 10+ món ăn...
+          </p>
+          <div style="height: 8px; background: #E0E7FF; border-radius: 999px; overflow: hidden; width: 80%; margin: 0 auto;">
+            <div class="skeleton-loader" style="width: 100%; height: 100%;"></div>
+          </div>
+        </div>
+
+        <div id="aiSuccessStep" style="display: none;">
+          <div style="background: #F5F3FF; padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 700; color: #6D28D9; font-size: 0.95rem;">🎯 Combo Đề Xuất Chuẩn Gu</span>
+              <span class="badge" style="background: #EDE9FE; color: #6D28D9;" id="aiConfidenceBadge">94% Phù hợp</span>
+            </div>
+            <p id="aiSummaryText" style="font-size: 0.85rem; color: #5B21B6; margin-top: 4px;"></p>
+          </div>
+
+          <div id="aiRecommendationsList" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;"></div>
+
+          <div class="ai-reason-box" id="aiReasonBox">
+            <strong>💡 Vì sao AI chọn các món này?</strong>
+            <div id="aiReasonDetail" style="margin-top: 4px; font-size: 0.85rem;"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #F8FAFC; border-radius: var(--radius-md);">
+            <div>
+              <div style="font-size: 0.8rem; color: #64748B;">Tổng giá combo gợi ý:</div>
+              <strong id="aiTotalComboPrice" style="font-size: 1.15rem; color: var(--primary);">0 ₫</strong>
+            </div>
+            <span id="aiBudgetCheckBadge" class="badge" style="background: #DCFCE7; color: #166534;">Trong ngân sách</span>
+          </div>
+        </div>
+
+        <div id="aiErrorStep" style="display: none; text-align: center; padding: 24px 16px;">
+          <div style="font-size: 2.2rem; margin-bottom: 10px;">⚠️</div>
+          <h4 style="color: #991B1B; margin-bottom: 6px;">Không thể đưa ra đề xuất phù hợp</h4>
+          <p id="aiErrorMessage" style="font-size: 0.88rem; color: #7F1D1D; margin-bottom: 16px;"></p>
+          <div style="display: flex; justify-content: center; gap: 10px;">
+            <button class="btn btn-secondary btn-sm" onclick="resetAiModalForm()">Thử lại với tiêu chí khác</button>
+            <button class="btn btn-primary btn-sm" onclick="closeModal('aiTasteModal')">Duyệt thực đơn thủ công</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" id="aiModalFooter">
+        <button class="btn btn-secondary" onclick="closeModal('aiTasteModal')">Đóng</button>
+        <button id="btnAiAnalyze" class="btn btn-ai" onclick="runAITasteAnalysis()">✨ Bắt đầu phân tích</button>
+        
+        <div id="aiResultActions" style="display: none; gap: 8px;">
+          <button class="btn btn-secondary btn-sm" onclick="resetAiModalForm()">Sửa khẩu vị</button>
+          <button class="btn btn-primary" onclick="acceptAiCombo()">✓ Chấp nhận & Thêm vào đơn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/data/mock-data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/ai-engine.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pages/diner-menu.js"></script>
+</body>
+</html>
+  

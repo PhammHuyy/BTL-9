@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Tiết Món Ăn | MenuMind - Khách hàng</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/pages/diner-dish-detail.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="brand-logo">
+      <div class="logo-icon">🍽️</div>
+      <div>
+        <span>MenuMind</span>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Thực đơn & Đặt món tại bàn</div>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="diner-menu.html" class="nav-link">← Quay lại Thực đơn</a>
+      <a href="diner-table-order.html" class="nav-link">📝 Đơn bàn của tôi (<span id="navCartCount">0</span>)</a>
+    </nav>
+
+    <div class="header-right">
+      <div class="table-tag">📍 Bàn 04 (Khu A)</div>
+      <a href="diner-table-order.html" class="btn btn-primary btn-sm">Xem đơn & Gọi món</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-muted);">
+      <a href="diner-menu.html" style="color: var(--primary);">Thực đơn</a> &gt; 
+      <span id="breadcrumbCategory">Món chính</span> &gt; 
+      <span id="breadcrumbName" style="color: var(--secondary); font-weight: 600;">Chi tiết</span>
+    </div>
+
+    <div class="dish-detail-container">
+      <div>
+        <div class="detail-img-wrap">
+          <img id="dishImage" src="" alt="Món ăn" class="detail-img">
+          <div id="dishBadges" style="position: absolute; top: 16px; left: 16px; display: flex; gap: 8px;"></div>
+        </div>
+
+        <div class="card" style="margin-top: 20px;">
+          <h4 style="font-size: 1rem; margin-bottom: 12px; color: var(--secondary);">Thông tin dinh dưỡng & Chuẩn bị</h4>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center;">
+            <div style="background: var(--bg-subtle); padding: 12px; border-radius: var(--radius-md);">
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Thời gian chờ</div>
+              <strong id="dishPrepTime" style="color: var(--secondary); font-size: 1.1rem;">15 phút</strong>
+            </div>
+            <div style="background: var(--bg-subtle); padding: 12px; border-radius: var(--radius-md);">
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Hàm lượng calo</div>
+              <strong id="dishCalories" style="color: var(--secondary); font-size: 1.1rem;">580 kcal</strong>
+            </div>
+            <div style="background: var(--bg-subtle); padding: 12px; border-radius: var(--radius-md);">
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Độ cay</div>
+              <strong id="dishSpicyText" style="color: #DC2626; font-size: 1.1rem;">Vừa</strong>
+            </div>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <strong style="font-size: 0.85rem; color: var(--secondary);">Nguyên liệu chính:</strong>
+            <div id="dishIngredients" style="margin-top: 6px;"></div>
+          </div>
+
+          <div id="allergenSection" style="margin-top: 14px; display: none;">
+            <strong style="font-size: 0.85rem; color: #991B1B;">⚠️ Cảnh báo chất gây dị ứng:</strong>
+            <div id="dishAllergens" style="margin-top: 6px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h1 id="dishName" style="font-size: 1.8rem; font-weight: 700; color: var(--secondary); margin-bottom: 8px;">
+          Tên món ăn
+        </h1>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <span id="dishRating" style="font-size: 0.95rem; font-weight: 600; color: #D97706;">⭐ 4.9 (38 đánh giá)</span>
+          <span style="color: var(--border-color);">|</span>
+          <span id="dishCategoryName" style="font-size: 0.9rem; color: var(--text-muted);">Món chính</span>
+        </div>
+
+        <div style="background: #FFF7ED; padding: 16px 20px; border-radius: var(--radius-md); border: 1px solid #FFEDD5; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-size: 0.8rem; color: #9A3412;">Giá niêm yết tại bàn:</div>
+            <strong id="dishPrice" style="font-size: 1.8rem; color: var(--primary);">289.000 ₫</strong>
+          </div>
+          <span class="badge" style="background:#DCFCE7; color:#166534; font-size:0.85rem;">Đang phục vụ</span>
+        </div>
+
+        <p id="dishDescription" style="color: var(--secondary-muted); margin-bottom: 24px; line-height: 1.7;">
+          Mô tả món ăn...
+        </p>
+
+        <form id="customizeForm" onsubmit="handleAddToCart(event)">
+          <div class="option-group">
+            <div class="option-title">1. Chọn kích cỡ / khẩu phần:</div>
+            <div class="option-pills" id="sizeOptions">
+              <div class="option-pill active" data-size="standard" onclick="selectOption('size', this)">Khẩu phần chuẩn</div>
+              <div class="option-pill" data-size="large" onclick="selectOption('size', this)">Khẩu phần lớn (+35.000 ₫)</div>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <div class="option-title">2. Độ cay / Gia vị chế biến:</div>
+            <div class="option-pills" id="spicyOptions">
+              <div class="option-pill active" data-spice="standard" onclick="selectOption('spicy', this)">Chuẩn vị Bếp trưởng</div>
+              <div class="option-pill" data-spice="no-spicy" onclick="selectOption('spicy', this)">Không cay (Không tiêu/ớt)</div>
+              <div class="option-pill" data-spice="extra-spicy" onclick="selectOption('spicy', this)">Cay nồng thêm ớt</div>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <label class="form-label" for="customNote">3. Ghi chú riêng cho Đầu bếp (Tùy chọn):</label>
+            <input type="text" id="customNote" class="form-control" placeholder="Ví dụ: Ăn tái vừa (Medium Rare), không bỏ hành tây...">
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 16px; margin-top: 24px; flex-wrap: wrap;">
+            <div class="quantity-control">
+              <button type="button" class="qty-btn" onclick="adjustQty(-1)">-</button>
+              <span class="qty-val" id="qtyDisplay">1</span>
+              <button type="button" class="qty-btn" onclick="adjustQty(1)">+</button>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="flex: 1; padding: 14px 24px; font-size: 1.05rem;">
+              🛒 Thêm vào đơn của bàn • <span id="submitPriceDisplay">289.000 ₫</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <section class="card" style="margin-top: 30px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="font-size: 1.2rem; color: var(--secondary);">
+          Đánh giá từ khách hàng đã thưởng thức
+        </h3>
+        <span style="font-size: 0.9rem; color: var(--text-muted);" id="reviewStats">5/5 sao</span>
+      </div>
+
+      <div id="dishReviewsList" style="display: flex; flex-direction: column; gap: 14px;"></div>
+    </section>
+  </main>
+
+  <script src="assets/data/mock-data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pages/diner-dish-detail.js"></script>
+</body>
+</html>
