@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cài Đặt Hệ Thống | MenuMind - Quản trị viên</title>
+  <title>Quản Lý Bàn Ăn & Sơ Đồ | MenuMind - Quản trị viên</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
-  <link rel="stylesheet" href="css/pages/admin-settings.css">
+  <link rel="stylesheet" href="css/pages/admin-table-management.css">
 </head>
 <body>
 
@@ -20,126 +20,148 @@
     </div>
 
     <nav class="header-nav">
-      <a href="admin-table-management.html" class="nav-link">🪑 Quản lý Bàn & QR</a>
+      <a href="admin-table-management.html" class="nav-link active">🪑 Quản lý Bàn & QR</a>
       <a href="admin-user-management.html" class="nav-link">👥 Tài khoản & Phân quyền</a>
-      <a href="admin-settings.html" class="nav-link active">⚙️ Cài đặt Hệ thống</a>
+      <a href="admin-settings.html" class="nav-link">⚙️ Cài đặt Hệ thống</a>
     </nav>
 
     <div class="header-right">
-      <button class="btn btn-primary btn-sm" onclick="saveAllSettings()">💾 Lưu Tất Cả Cài Đặt</button>
+      <span style="font-size: 0.85rem; color: var(--text-muted);">Admin: <strong>Nguyễn Văn Tuấn</strong></span>
+      <button class="btn btn-primary btn-sm" onclick="openTableModal()">+ Thêm bàn mới</button>
     </div>
   </header>
 
-  <main class="container" style="max-width: 980px;">
+  <main class="container">
     <div class="page-head">
       <div>
-        <h1 class="page-title">Cài Đặt Hệ Thống & Cấu Hình Vận Hành</h1>
-        <p class="page-subtitle">Thiết lập thông số nhà hàng, tỷ lệ thuế phí, tham số AI và quản lý dữ liệu mẫu</p>
+        <h1 class="page-title">Sơ Đồ Bàn Ăn & Mã QR Tự Động</h1>
+        <p class="page-subtitle">Quản lý không gian nhà hàng, tạo mã QR bàn để thực khách tự quét gọi món</p>
       </div>
-      <button class="btn btn-primary" onclick="saveAllSettings()">💾 Lưu Tất Cả Cài Đặt</button>
+      <button class="btn btn-primary" onclick="openTableModal()">+ Thêm bàn mới</button>
     </div>
 
-    <div class="card" style="margin-bottom: 24px;">
-      <h3 style="font-size: 1.15rem; color: var(--secondary); margin-bottom: 16px;">
-        🏢 Thông Tin Thương Hiệu & Nhà Hàng
-      </h3>
+    <div class="card" style="margin-bottom: 24px; padding: 16px 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <span style="font-weight: 600; font-size: 0.9rem; color: var(--secondary);">Lọc khu vực:</span>
+          <select id="zoneFilter" class="form-control" style="width: auto; min-width: 170px;" onchange="renderTables()">
+            <option value="all">Tất cả khu vực</option>
+            <option value="Khu A - Trong nhà">Khu A - Trong nhà</option>
+            <option value="Khu B - Sân vườn">Khu B - Sân vườn</option>
+            <option value="Khu VIP Lầu 2">Khu VIP Lầu 2</option>
+          </select>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-        <div class="form-group">
-          <label class="form-label" for="settingRestName">Tên nhà hàng:</label>
-          <input type="text" id="settingRestName" class="form-control">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="settingHotline">Hotline liên hệ đặt bàn:</label>
-          <input type="text" id="settingHotline" class="form-control">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="settingAddress">Địa chỉ nhà hàng:</label>
-        <input type="text" id="settingAddress" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="settingHours">Giờ mở cửa phục vụ:</label>
-        <input type="text" id="settingHours" class="form-control">
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom: 24px;">
-      <h3 style="font-size: 1.15rem; color: var(--secondary); margin-bottom: 16px;">
-        💳 Cấu Hình Thuế, Phí Dịch Vụ & Hóa Đơn
-      </h3>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-        <div class="form-group">
-          <label class="form-label" for="settingVat">Tỷ lệ thuế VAT (%):</label>
-          <input type="number" id="settingVat" class="form-control" min="0" max="20" step="1">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="settingServiceFee">Phí dịch vụ nhà hàng (%):</label>
-          <input type="number" id="settingServiceFee" class="form-control" min="0" max="20" step="1">
-        </div>
-      </div>
-
-      <div style="display: flex; gap: 20px; align-items: center; margin-top: 10px;">
-        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-          <input type="checkbox" id="settingAutoPrint">
-          <span style="font-size: 0.9rem; font-weight: 500;">Tự động gửi lệnh in hóa đơn khi khách yêu cầu tính tiền</span>
-        </label>
-        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-          <input type="checkbox" id="settingAllowCancel">
-          <span style="font-size: 0.9rem; font-weight: 500;">Cho phép khách tự hủy món khi bếp chưa nhận nấu (pending)</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom: 24px;">
-      <h3 style="font-size: 1.15rem; color: var(--secondary); margin-bottom: 16px;">
-        🤖 Cấu Hình Tham Số Điều Phối Bếp & Mô Hình AI
-      </h3>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-        <div class="form-group">
-          <label class="form-label" for="settingAlertDelay">Ngưỡng cảnh báo trễ bếp (Phút):</label>
-          <input type="number" id="settingAlertDelay" class="form-control" min="10" max="60">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="settingAiModel">Mô hình AI xử lý:</label>
-          <select id="settingAiModel" class="form-control">
-            <option value="Gemini 3.8 Flash">Gemini 3.8 Flash (Tốc độ cao & Phản hồi sâu)</option>
-            <option value="MenuMind Rule Engine">Quy tắc định sẵn (Ngoại tuyến 100%)</option>
+          <select id="statusFilter" class="form-control" style="width: auto; min-width: 160px;" onchange="renderTables()">
+            <option value="all">Tất cả trạng thái</option>
+            <option value="available">Bàn đang trống</option>
+            <option value="occupied">Đang có khách ngồi</option>
+            <option value="reserved">Đã được đặt trước</option>
           </select>
         </div>
+
+        <div style="display: flex; gap: 14px; font-size: 0.85rem;">
+          <span style="color:#10B981;">● Bàn trống</span>
+          <span style="color:#EF4444;">● Đang có khách</span>
+          <span style="color:#F59E0B;">● Đã đặt trước</span>
+        </div>
       </div>
     </div>
 
-    <div class="card" style="background: #FEF2F2; border-color: #FECACA;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
-        <h3 style="font-size: 1.15rem; color: #991B1B;">
-          ⚠️ Vùng Quản Trị Dữ Liệu & Khôi Phục Mẫu
-        </h3>
-        <span class="badge badge-urgent">Vùng nhạy cảm</span>
-      </div>
-
-      <p style="font-size: 0.88rem; color: #7F1D1D; margin-bottom: 16px; line-height: 1.6;">
-        Hệ thống MenuMind lưu trữ trạng thái 6 thực thể (menuItems, orders, orderItems, tables, feedback, staff) trong <strong>LocalStorage</strong> của trình duyệt. Bạn có thể tải file sao lưu JSON hoặc khôi phục lại toàn bộ dữ liệu mẫu ban đầu để phục vụ việc demo/chấm điểm BTL.
-      </p>
-
-      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-        <button class="btn btn-secondary btn-sm" onclick="exportFullBackup()">
-          📦 Tải file sao lưu toàn bộ hệ thống (.json)
-        </button>
-        <button class="btn btn-danger btn-sm" onclick="handleFullDatabaseReset()">
-          🔄 Khôi phục lại Dữ liệu mẫu khởi tạo (Reset Mock Data)
-        </button>
-      </div>
-    </div>
+    <div class="grid-4" id="tablesContainer"></div>
   </main>
+
+  <!-- MODAL TABLE -->
+  <div class="modal-backdrop" id="tableModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title" id="tableModalTitle">Thêm Bàn Ăn Mới</h3>
+        <button onclick="closeModal('tableModal')">✕</button>
+      </div>
+      <form id="tableForm" onsubmit="handleSaveTable(event)">
+        <div class="modal-body">
+          <input type="hidden" id="formTableId">
+
+          <div class="form-group">
+            <label class="form-label" for="formTableNumber">Số hiệu bàn <span style="color:#DC2626;">*</span>:</label>
+            <input type="text" id="formTableNumber" class="form-control" placeholder="Ví dụ: Bàn 09" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="formTableZone">Khu vực <span style="color:#DC2626;">*</span>:</label>
+            <select id="formTableZone" class="form-control" required>
+              <option value="Khu A - Trong nhà">Khu A - Trong nhà</option>
+              <option value="Khu B - Sân vườn">Khu B - Sân vườn</option>
+              <option value="Khu VIP Lầu 2">Khu VIP Lầu 2</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="formTableCapacity">Sức chứa tối đa (Số người) <span style="color:#DC2626;">*</span>:</label>
+            <input type="number" id="formTableCapacity" class="form-control" min="1" max="50" value="4" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="formTableStatus">Trạng thái ban đầu:</label>
+            <select id="formTableStatus" class="form-control">
+              <option value="available">Bàn trống (Available)</option>
+              <option value="occupied">Đang có khách ngồi</option>
+              <option value="reserved">Đã được đặt trước</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('tableModal')">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu Bàn</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL QR CODE -->
+  <div class="modal-backdrop" id="qrModal">
+    <div class="modal-window" style="max-width: 420px; text-align: center;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="qrModalTitle">Mã QR Đặt Món</h3>
+        <button onclick="closeModal('qrModal')">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 24px;">
+        <div style="background: #fff; padding: 20px; border-radius: var(--radius-md); border: 2px dashed var(--border-color); display: inline-block; margin-bottom: 16px;">
+          <svg width="180" height="180" viewBox="0 0 100 100" style="margin: 0 auto;">
+            <rect width="100" height="100" fill="#fff" />
+            <rect x="10" y="10" width="25" height="25" fill="#0F172A" />
+            <rect x="15" y="15" width="15" height="15" fill="#fff" />
+            <rect x="18" y="18" width="9" height="9" fill="#0F172A" />
+            <rect x="65" y="10" width="25" height="25" fill="#0F172A" />
+            <rect x="70" y="15" width="15" height="15" fill="#fff" />
+            <rect x="73" y="18" width="9" height="9" fill="#0F172A" />
+            <rect x="10" y="65" width="25" height="25" fill="#0F172A" />
+            <rect x="15" y="70" width="15" height="15" fill="#fff" />
+            <rect x="18" y="73" width="9" height="9" fill="#0F172A" />
+            <rect x="45" y="15" width="10" height="10" fill="#0F172A" />
+            <rect x="45" y="35" width="15" height="10" fill="#0F172A" />
+            <rect x="25" y="45" width="10" height="15" fill="#0F172A" />
+            <rect x="45" y="55" width="10" height="10" fill="#0F172A" />
+            <rect x="65" y="45" width="15" height="10" fill="#0F172A" />
+            <rect x="55" y="75" width="25" height="15" fill="#0F172A" />
+          </svg>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--secondary); font-weight: 600;" id="qrDesc">
+          Quét để mở Thực đơn thông minh MenuMind
+        </p>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
+          Khách ngồi tại bàn quét mã bằng camera điện thoại để xem menu và đặt món tự động.
+        </p>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button class="btn btn-secondary btn-sm" onclick="printQrCode()">🖨️ In mã QR bàn này</button>
+        <button class="btn btn-primary btn-sm" onclick="closeModal('qrModal')">Đóng</button>
+      </div>
+    </div>
+  </div>
 
   <script src="assets/data/mock-data.js"></script>
   <script src="js/store.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/pages/admin-settings.js"></script>
+  <script src="js/pages/admin-table-management.js"></script>
 </body>
 </html>

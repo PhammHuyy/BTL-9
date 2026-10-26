@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng Điều Phối Bếp (KDS) | MenuMind - Nhân viên bếp</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/pages/kitchen-board.css">
+</head>
+<body style="background: #F1F5F9;">
+
+  <header class="kds-header">
+    <div class="kds-brand">
+      <span style="font-size: 1.5rem;">👨‍🍳</span>
+      <span>MenuMind KDS</span>
+      <span class="badge" style="background:#334155; color:#F8FAFC;">Kitchen Display System</span>
+    </div>
+
+    <nav class="kds-nav">
+      <a href="kitchen-board.html" class="kds-nav-link active">📋 Bảng điều phối (Kanban)</a>
+      <a href="kitchen-wait-time-alerts.html" class="kds-nav-link">⏱️ Cảnh báo thời gian chờ & AI-2</a>
+      <a href="kitchen-order-detail.html?orderId=ORD-101" class="kds-nav-link">🔍 Chi tiết đơn bếp</a>
+    </nav>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="font-size: 0.85rem; color: #94A3B8;">Ca trực: <strong style="color: #fff;">Bếp trưởng Lê Hoàng Bách</strong></span>
+      <button class="btn btn-secondary btn-sm" onclick="handleRefreshKds()" style="background:#1E293B; color:#fff; border-color:#334155;">🔄 Làm mới</button>
+    </div>
+  </header>
+
+  <main class="container" style="max-width: 1400px;">
+    <div class="filter-bar">
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <span style="font-weight: 600; font-size: 0.9rem; color: var(--secondary);">Lọc theo trạm:</span>
+        <button class="btn btn-sm btn-primary" id="btnStationAll" onclick="filterByStation('all')">Tất cả trạm</button>
+        <button class="btn btn-sm btn-secondary" id="btnStationGrill" onclick="filterByStation('grill')">🥩 Bếp Nướng</button>
+        <button class="btn btn-sm btn-secondary" id="btnStationSaute" onclick="filterByStation('saute')">🍳 Bếp Xào</button>
+        <button class="btn btn-sm btn-secondary" id="btnStationHotpot" onclick="filterByStation('hotpot')">🍲 Bếp Lẩu</button>
+        <button class="btn btn-sm btn-secondary" id="btnStationBar" onclick="filterByStation('bar')">🍹 Quầy Pha Chế</button>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <label class="rush-toggle" id="rushModeBtn" onclick="toggleRushMode()">
+          <span>🔥</span>
+          <span id="rushText">Chế độ Giờ cao điểm: TẮT</span>
+        </label>
+        <a href="kitchen-wait-time-alerts.html" class="btn btn-ai btn-sm">
+          🤖 AI Kitchen Load Predictor
+        </a>
+      </div>
+    </div>
+
+    <div class="kanban-board">
+      <div class="kanban-col" style="border-top: 4px solid #F59E0B;">
+        <div class="kanban-col-header">
+          <div class="kanban-col-title">
+            <span>⏳ Chờ tiếp nhận</span>
+          </div>
+          <span class="kanban-col-count" id="countPending">0</span>
+        </div>
+        <div id="colPendingCards"></div>
+      </div>
+
+      <div class="kanban-col" style="border-top: 4px solid #0284C7;">
+        <div class="kanban-col-header">
+          <div class="kanban-col-title">
+            <span>🔥 Đang chế biến</span>
+          </div>
+          <span class="kanban-col-count" id="countPreparing">0</span>
+        </div>
+        <div id="colPreparingCards"></div>
+      </div>
+
+      <div class="kanban-col" style="border-top: 4px solid #10B981;">
+        <div class="kanban-col-header">
+          <div class="kanban-col-title">
+            <span>🍽️ Đã nấu xong / Chờ phục vụ</span>
+          </div>
+          <span class="kanban-col-count" id="countReady">0</span>
+        </div>
+        <div id="colReadyCards"></div>
+      </div>
+
+      <div class="kanban-col" style="border-top: 4px solid #64748B;">
+        <div class="kanban-col-header">
+          <div class="kanban-col-title">
+            <span>✓ Đã giao ra bàn</span>
+          </div>
+          <span class="kanban-col-count" id="countServed">0</span>
+        </div>
+        <div id="colServedCards"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/data/mock-data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pages/kitchen-board.js"></script>
+</body>
+</html>

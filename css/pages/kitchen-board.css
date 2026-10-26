@@ -1,0 +1,55 @@
+/* kitchen-board.css - Styles rieng cho trang kitchen-board */
+
+.kds-header {
+      background: #0F172A;
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .kds-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #F97316;
+    }
+    .kds-nav {
+      display: flex;
+      gap: 14px;
+    }
+    .kds-nav-link {
+      color: #94A3B8;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+    }
+    .kds-nav-link:hover, .kds-nav-link.active {
+      color: #fff;
+      background: #1E293B;
+    }
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .rush-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      color: #991B1B;
+      font-weight: 600;
+      cursor: pointer;
+    }
