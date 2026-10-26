@@ -1,0 +1,51 @@
+/* 404.css - Styles riêng cho trang 404 Không Tìm Thấy Món */
+
+.error-page-wrapper {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.error-card {
+  max-width: 520px;
+  padding: 40px 30px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-xl);
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 12px;
+  animation: bounce 2s infinite ease-in-out;
+}
+
+.error-title {
+  font-size: 1.8rem;
+  color: var(--secondary);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.error-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.error-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
