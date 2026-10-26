@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo Cáo Doanh Thu & Insights | MenuMind - Quản lý</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/pages/manager-sales-insights.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="brand-logo">
+      <div class="logo-icon" style="background: linear-gradient(135deg, #0284C7, #0369A1);">📊</div>
+      <div>
+        <span>MenuMind Manager</span>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Cổng Quản lý & Vận hành F&B</div>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="manager-menu-management.html" class="nav-link">📖 Quản lý Thực đơn</a>
+      <a href="manager-sales-insights.html" class="nav-link active">📈 Báo cáo Doanh thu</a>
+      <a href="manager-feedback-center.html" class="nav-link">💬 Trung tâm Phản hồi (AI-3)</a>
+    </nav>
+
+    <div class="header-right">
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-secondary btn-sm" onclick="exportSalesReport()">📊 Xuất Báo cáo CSV</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">Báo Cáo Hoạt Động & Doanh Thu</h1>
+        <p class="page-subtitle">Phân tích hiệu quả kinh doanh F&B, món bán chạy và năng lực điều phối bếp</p>
+      </div>
+
+      <div style="display: flex; gap: 8px; background: var(--bg-card); padding: 4px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+        <button class="btn btn-sm btn-primary" id="btnPeriodToday" onclick="changePeriod('today')">Hôm nay</button>
+        <button class="btn btn-sm btn-secondary" id="btnPeriodWeek" onclick="changePeriod('week')">7 ngày qua</button>
+        <button class="btn btn-sm btn-secondary" id="btnPeriodMonth" onclick="changePeriod('month')">Tháng này</button>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Tổng doanh thu bán hàng</div>
+        <div class="kpi-val" id="kpiRevenue">14.850.000 ₫</div>
+        <div class="kpi-trend trend-up">
+          <span>▲ +18.4%</span>
+          <span style="color: var(--text-muted); font-weight: normal;">so với kỳ trước</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-title">Số lượt order phục vụ</div>
+        <div class="kpi-val" id="kpiOrders">48 đơn</div>
+        <div class="kpi-trend trend-up">
+          <span>▲ +12 đơn</span>
+          <span style="color: var(--text-muted); font-weight: normal;">công suất 92%</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-title">Thời gian chờ trung bình</div>
+        <div class="kpi-val" id="kpiWaitTime" style="color: #059669;">14.2 phút</div>
+        <div class="kpi-trend trend-up">
+          <span>▼ Giảm 3.8m</span>
+          <span style="color: var(--text-muted); font-weight: normal;">nhờ AI dự báo trạm</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-title">Đánh giá trung bình thực khách</div>
+        <div class="kpi-val" style="color: #D97706;" id="kpiRating">4.8 / 5.0 ★</div>
+        <div class="kpi-trend trend-up">
+          <span>88% hài lòng</span>
+          <span style="color: var(--text-muted); font-weight: normal;">(92 lượt review)</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 24px; margin-bottom: 24px;">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <div>
+            <h3 style="font-size: 1.15rem; color: var(--secondary);">Lượng Khách & Doanh Thu Theo Giờ</h3>
+            <p style="font-size: 0.82rem; color: var(--text-muted);">Khung giờ cao điểm ghi nhận lúc 12h-13h trưa và 19h-20h tối</p>
+          </div>
+          <span class="badge" style="background:#FEF3C7; color:#B45309;">Đỉnh điểm: 19h30</span>
+        </div>
+
+        <div class="chart-container" id="chartContainer">
+          <div class="chart-bar-wrap">
+            <div class="chart-bar" style="height: 35%;" data-tooltip="11h: 1.2tr"></div>
+            <span class="chart-label">11h</span>
+          </div>
+          <div class="chart-bar-wrap">
+            <div class="chart-bar" style="height: 75%;" data-tooltip="12h: 2.8tr"></div>
+            <span class="chart-label">12h</span>
+          </div>
+          <div class="chart-bar-wrap">
+            <div class="chart-bar" style="height: 50%;" data-tooltip="13h: 1.9tr"></div>
+            <span class="chart-label">13h</span>
+          </div>
+          <div class="chart-bar-wrap">
+            <div class="chart-bar" style="height: 25%;" data-tooltip="17h: 950k"></div>
+            <span class="chart-label">17h</span>
+          </div>
+          <div class="chart-bar-wrap">
+            <div class="chart-bar" style="height: 60%;" data-tooltip="18h: 2.3tr"></div>
+            <span class="chart-label">18h</span>
+          </div>
+          <div class="chart-bar-wrap">
+            <div class="chart-bar" style="height: 95%; background: linear-gradient(180deg, #DC2626 0%, #F87171 100%);" data-tooltip="19h (Đỉnh): 3.9tr"></div>
+            <span class="chart-label" style="font-weight:700; color:#DC2626;">19h 🔥</span>
+          </div>
+          <div class="chart-bar-wrap">
+            <div class="chart-bar" style="height: 80%;" data-tooltip="20h: 3.1tr"></div>
+            <span class="chart-label">20h</span>
+          </div>
+          <div class="chart-bar-wrap">
+            <div class="chart-bar" style="height: 40%;" data-tooltip="21h: 1.4tr"></div>
+            <span class="chart-label">21h</span>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 14px; font-size: 0.85rem; color: var(--text-muted);">
+          <span>🕒 Ca Sáng (10:00 - 15:00): 42% doanh số</span>
+          <span>🌙 Ca Tối (17:00 - 23:00): 58% doanh số</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size: 1.15rem; color: var(--secondary); margin-bottom: 16px;">
+          🏆 Top 5 Món Bán Chạy Nhất
+        </h3>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;" id="topDishesList">
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;">
+              <strong>1. Bò Wagyu Nướng Sốt Tiêu Đen</strong>
+              <span style="font-weight:700; color:var(--primary);">38 phần</span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" style="width: 95%; background: var(--primary);"></div>
+            </div>
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;">
+              <strong>2. Trà Đào Cam Sả Hạt Chia</strong>
+              <span style="font-weight:700; color:var(--primary);">88 ly</span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" style="width: 88%; background: #F59E0B;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;">
+              <strong>3. Panna Cotta Xoài Cát Hòa Lộc</strong>
+              <span style="font-weight:700; color:var(--primary);">65 phần</span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" style="width: 72%; background: #10B981;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;">
+              <strong>4. Lẩu Nấm Thập Cẩm Chay</strong>
+              <span style="font-weight:700; color:var(--primary);">29 nồi</span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" style="width: 58%; background: #0284C7;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;">
+              <strong>5. Sườn Cừu Nướng Hương Thảo</strong>
+              <span style="font-weight:700; color:var(--primary);">24 dẻ</span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" style="width: 48%; background: #8B5CF6;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size: 1.15rem; color: var(--secondary); margin-bottom: 14px;">
+        👨‍🍳 Hiệu Suất Vận Hành Các Trạm Bếp
+      </h3>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: var(--bg-subtle); border-bottom: 2px solid var(--border-color);">
+              <th style="padding: 10px 14px;">Trạm bếp</th>
+              <th style="padding: 10px;">Phụ trách chính</th>
+              <th style="padding: 10px;">Số món đã nấu</th>
+              <th style="padding: 10px;">Thời gian chế biến TB</th>
+              <th style="padding: 10px;">Đúng hạn (< 20m)</th>
+              <th style="padding: 10px; text-align: right;">Đánh giá chất lượng</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px 14px;"><strong>🥩 Trạm Bếp Nướng</strong></td>
+              <td>Đầu bếp Đỗ Bích Ngân</td>
+              <td>42 món</td>
+              <td style="color:#DC2626; font-weight:600;">18.5 phút</td>
+              <td><span class="badge" style="background:#FEF3C7; color:#B45309;">86% Đúng hạn</span></td>
+              <td style="text-align: right; color:#D97706;">⭐ 4.9</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px 14px;"><strong>🍳 Trạm Bếp Xào & Chảo</strong></td>
+              <td>Bếp trưởng Lê Hoàng Bách</td>
+              <td>58 món</td>
+              <td style="color:#059669; font-weight:600;">12.2 phút</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">96% Đúng hạn</span></td>
+              <td style="text-align: right; color:#D97706;">⭐ 4.8</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px 14px;"><strong>🍲 Trạm Bếp Lẩu & Hầm</strong></td>
+              <td>Đầu bếp phụ Nguyễn Văn Hùng</td>
+              <td>28 món</td>
+              <td style="color:#059669; font-weight:600;">11.0 phút</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">98% Đúng hạn</span></td>
+              <td style="text-align: right; color:#D97706;">⭐ 4.7</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 14px;"><strong>🍹 Quầy Bar & Tráng Miệng</strong></td>
+              <td>Barista Phạm Quốc Dũng</td>
+              <td>112 phần</td>
+              <td style="color:#059669; font-weight:600;">4.8 phút</td>
+              <td><span class="badge" style="background:#DCFCE7; color:#15803D;">100% Đúng hạn</span></td>
+              <td style="text-align: right; color:#D97706;">⭐ 4.9</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/data/mock-data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pages/manager-sales-insights.js"></script>
+</body>
+</html>

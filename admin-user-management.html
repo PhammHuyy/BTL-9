@@ -1,12 +1,12 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cài Đặt Hệ Thống | MenuMind - Quản trị viên</title>
+  <title>Quản Lý Tài Khoản & Nhân Sự | MenuMind - Admin</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
-  <link rel="stylesheet" href="css/pages/admin-settings.css">
+  <link rel="stylesheet" href="css/pages/admin-user-management.css">
 </head>
 <body>
 
@@ -21,125 +21,130 @@
 
     <nav class="header-nav">
       <a href="admin-table-management.html" class="nav-link">🪑 Quản lý Bàn & QR</a>
-      <a href="admin-user-management.html" class="nav-link">👥 Tài khoản & Phân quyền</a>
-      <a href="admin-settings.html" class="nav-link active">⚙️ Cài đặt Hệ thống</a>
+      <a href="admin-user-management.html" class="nav-link active">👥 Tài khoản & Phân quyền</a>
+      <a href="admin-settings.html" class="nav-link">⚙️ Cài đặt Hệ thống</a>
     </nav>
 
     <div class="header-right">
-      <button class="btn btn-primary btn-sm" onclick="saveAllSettings()">💾 Lưu Tất Cả Cài Đặt</button>
+      <button class="btn btn-primary btn-sm" onclick="openStaffModal()">+ Thêm nhân sự mới</button>
     </div>
   </header>
 
-  <main class="container" style="max-width: 980px;">
+  <main class="container">
     <div class="page-head">
       <div>
-        <h1 class="page-title">Cài Đặt Hệ Thống & Cấu Hình Vận Hành</h1>
-        <p class="page-subtitle">Thiết lập thông số nhà hàng, tỷ lệ thuế phí, tham số AI và quản lý dữ liệu mẫu</p>
+        <h1 class="page-title">Quản Lý Nhân Sự & Phân Quyền Vai Trò</h1>
+        <p class="page-subtitle">Phân bổ tài khoản cho Bếp, Phục vụ, Quản lý ca và Quản trị viên hệ thống MenuMind</p>
       </div>
-      <button class="btn btn-primary" onclick="saveAllSettings()">💾 Lưu Tất Cả Cài Đặt</button>
+      <button class="btn btn-primary" onclick="openStaffModal()">+ Thêm tài khoản nhân sự</button>
     </div>
 
-    <div class="card" style="margin-bottom: 24px;">
-      <h3 style="font-size: 1.15rem; color: var(--secondary); margin-bottom: 16px;">
-        🏢 Thông Tin Thương Hiệu & Nhà Hàng
-      </h3>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-        <div class="form-group">
-          <label class="form-label" for="settingRestName">Tên nhà hàng:</label>
-          <input type="text" id="settingRestName" class="form-control">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="settingHotline">Hotline liên hệ đặt bàn:</label>
-          <input type="text" id="settingHotline" class="form-control">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="settingAddress">Địa chỉ nhà hàng:</label>
-        <input type="text" id="settingAddress" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="settingHours">Giờ mở cửa phục vụ:</label>
-        <input type="text" id="settingHours" class="form-control">
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom: 24px;">
-      <h3 style="font-size: 1.15rem; color: var(--secondary); margin-bottom: 16px;">
-        💳 Cấu Hình Thuế, Phí Dịch Vụ & Hóa Đơn
-      </h3>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-        <div class="form-group">
-          <label class="form-label" for="settingVat">Tỷ lệ thuế VAT (%):</label>
-          <input type="number" id="settingVat" class="form-control" min="0" max="20" step="1">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="settingServiceFee">Phí dịch vụ nhà hàng (%):</label>
-          <input type="number" id="settingServiceFee" class="form-control" min="0" max="20" step="1">
-        </div>
-      </div>
-
-      <div style="display: flex; gap: 20px; align-items: center; margin-top: 10px;">
-        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-          <input type="checkbox" id="settingAutoPrint">
-          <span style="font-size: 0.9rem; font-weight: 500;">Tự động gửi lệnh in hóa đơn khi khách yêu cầu tính tiền</span>
-        </label>
-        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-          <input type="checkbox" id="settingAllowCancel">
-          <span style="font-size: 0.9rem; font-weight: 500;">Cho phép khách tự hủy món khi bếp chưa nhận nấu (pending)</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom: 24px;">
-      <h3 style="font-size: 1.15rem; color: var(--secondary); margin-bottom: 16px;">
-        🤖 Cấu Hình Tham Số Điều Phối Bếp & Mô Hình AI
-      </h3>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-        <div class="form-group">
-          <label class="form-label" for="settingAlertDelay">Ngưỡng cảnh báo trễ bếp (Phút):</label>
-          <input type="number" id="settingAlertDelay" class="form-control" min="10" max="60">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="settingAiModel">Mô hình AI xử lý:</label>
-          <select id="settingAiModel" class="form-control">
-            <option value="Gemini 3.8 Flash">Gemini 3.8 Flash (Tốc độ cao & Phản hồi sâu)</option>
-            <option value="MenuMind Rule Engine">Quy tắc định sẵn (Ngoại tuyến 100%)</option>
+    <div class="card staff-filter-card">
+      <div class="staff-filter-row">
+        <div class="staff-filter-inputs">
+          <input type="text" id="staffSearchInput" class="form-control" placeholder="🔍 Tìm theo tên nhân viên, email, số điện thoại..." oninput="renderStaffTable()">
+          <select id="staffRoleFilter" class="form-control" style="width: auto; min-width: 170px;" onchange="renderStaffTable()">
+            <option value="all">Tất cả vai trò</option>
+            <option value="admin">Quản trị viên (Admin)</option>
+            <option value="manager">Quản lý nhà hàng</option>
+            <option value="kitchen">Nhân viên bếp (Chef)</option>
+            <option value="waiter">Nhân viên phục vụ</option>
           </select>
         </div>
+
+        <div style="font-size: 0.88rem; color: var(--text-muted);">
+          Tổng số nhân sự: <strong id="staffCountBadge" style="color: var(--secondary);">6 nhân viên</strong>
+        </div>
       </div>
     </div>
 
-    <div class="card" style="background: #FEF2F2; border-color: #FECACA;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
-        <h3 style="font-size: 1.15rem; color: #991B1B;">
-          ⚠️ Vùng Quản Trị Dữ Liệu & Khôi Phục Mẫu
-        </h3>
-        <span class="badge badge-urgent">Vùng nhạy cảm</span>
-      </div>
-
-      <p style="font-size: 0.88rem; color: #7F1D1D; margin-bottom: 16px; line-height: 1.6;">
-        Hệ thống MenuMind lưu trữ trạng thái 6 thực thể (menuItems, orders, orderItems, tables, feedback, staff) trong <strong>LocalStorage</strong> của trình duyệt. Bạn có thể tải file sao lưu JSON hoặc khôi phục lại toàn bộ dữ liệu mẫu ban đầu để phục vụ việc demo/chấm điểm BTL.
-      </p>
-
-      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-        <button class="btn btn-secondary btn-sm" onclick="exportFullBackup()">
-          📦 Tải file sao lưu toàn bộ hệ thống (.json)
-        </button>
-        <button class="btn btn-danger btn-sm" onclick="handleFullDatabaseReset()">
-          🔄 Khôi phục lại Dữ liệu mẫu khởi tạo (Reset Mock Data)
-        </button>
+    <div class="card staff-table-card">
+      <div class="table-responsive">
+        <table class="staff-table">
+          <thead>
+            <tr>
+              <th style="padding: 14px 16px;">Họ tên & Mã NV</th>
+              <th style="padding: 14px 12px;">Vai trò hệ thống</th>
+              <th style="padding: 14px 12px;">Số điện thoại</th>
+              <th style="padding: 14px 12px;">Email</th>
+              <th style="padding: 14px 12px;">Ca trực</th>
+              <th style="padding: 14px 12px; text-align: center;">Trạng thái</th>
+              <th style="padding: 14px 16px; text-align: right;">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="staffTableBody"></tbody>
+        </table>
       </div>
     </div>
   </main>
 
+  <!-- MODAL STAFF -->
+  <div class="modal-backdrop" id="staffModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title" id="staffModalTitle">Thêm Nhân Sự Mới</h3>
+        <button onclick="closeModal('staffModal')">✕</button>
+      </div>
+      <form id="staffForm" onsubmit="handleSaveStaff(event)">
+        <div class="modal-body">
+          <input type="hidden" id="formStaffId">
+
+          <div class="form-group">
+            <label class="form-label" for="formStaffName">Họ và tên nhân viên <span style="color:#DC2626;">*</span>:</label>
+            <input type="text" id="formStaffName" class="form-control" placeholder="Ví dụ: Hoàng Minh Đức" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label" for="formStaffRole">Vai trò hệ thống <span style="color:#DC2626;">*</span>:</label>
+              <select id="formStaffRole" class="form-control" required>
+                <option value="waiter">Nhân viên phục vụ</option>
+                <option value="kitchen">Nhân viên bếp</option>
+                <option value="manager">Quản lý nhà hàng</option>
+                <option value="admin">Quản trị viên</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="formStaffShift">Ca làm việc:</label>
+              <select id="formStaffShift" class="form-control">
+                <option value="Toàn thời gian">Toàn thời gian (Full-time)</option>
+                <option value="Ca Sáng - Chiều">Ca Sáng (09:00 - 16:00)</option>
+                <option value="Ca Tối">Ca Tối (16:00 - 23:00)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label" for="formStaffPhone">Số điện thoại <span style="color:#DC2626;">*</span>:</label>
+              <input type="tel" id="formStaffPhone" class="form-control" placeholder="09xxxxxxxx" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="formStaffEmail">Email đăng nhập <span style="color:#DC2626;">*</span>:</label>
+              <input type="email" id="formStaffEmail" class="form-control" placeholder="user@menumind.vn" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="formStaffStatus">Trạng thái làm việc:</label>
+            <select id="formStaffStatus" class="form-control">
+              <option value="active">Đang làm việc (Active)</option>
+              <option value="inactive">Tạm nghỉ / Đã nghỉ việc</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('staffModal')">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu Nhân Sự</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="assets/data/mock-data.js"></script>
   <script src="js/store.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/pages/admin-settings.js"></script>
+  <script src="js/pages/admin-user-management.js"></script>
 </body>
 </html>
