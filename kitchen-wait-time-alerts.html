@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cảnh Báo Thời Gian Chờ & AI Dự Báo | MenuMind - Bếp</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/pages/kitchen-wait-time-alerts.css">
+</head>
+<body style="background: #F1F5F9;">
+
+  <header class="site-header" style="background:#0F172A; border-bottom-color:#1E293B; color:#fff;">
+    <div class="brand-logo" style="color:#F97316;">
+      <span style="font-size: 1.4rem;">👨‍🍳</span>
+      <span>MenuMind KDS</span>
+    </div>
+
+    <nav class="header-nav">
+      <a href="kitchen-board.html" class="nav-link" style="color:#94A3B8;">📋 Bảng điều phối (Kanban)</a>
+      <a href="kitchen-wait-time-alerts.html" class="nav-link active" style="color:#fff; background:#1E293B;">⏱️ Cảnh báo thời gian chờ & AI-2</a>
+      <a href="kitchen-order-detail.html?orderId=ORD-101" class="nav-link" style="color:#94A3B8;">🔍 Chi tiết đơn</a>
+    </nav>
+
+    <div class="header-right">
+      <button class="btn btn-ai btn-sm" onclick="runAiKitchenPredictor()">
+        ✨ Kích hoạt AI Kitchen Predictor
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">Cảnh Báo Thời Gian Chờ & Dự Báo Tải Bếp</h1>
+        <p class="page-subtitle">Giám sát các bàn chờ quá 20 phút và sử dụng AI để điều phối thông minh tránh nghẽn trạm</p>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="openCreateAlertModal()">+ Thêm cảnh báo thủ công</button>
+    </div>
+
+    <!-- AI-2 SECTION -->
+    <section class="ai-card" id="aiKitchenSection">
+      <div class="ai-card-header">
+        <div class="ai-badge">🤖 AI-2 • Kitchen Load Predictor</div>
+        <span style="font-size: 0.8rem; color: #6D28D9; font-weight: 600;" id="aiModelVersion">MenuMind LoadEngine v3.8</span>
+      </div>
+
+      <div id="aiPredictIntro">
+        <h3 style="color: #4C1D95; font-size: 1.15rem; margin-bottom: 6px;">
+          Mô phỏng thời gian chờ & Phát hiện điểm nghẽn bằng AI
+        </h3>
+        <p style="font-size: 0.88rem; color: #5B21B6; margin-bottom: 16px;">
+          AI sẽ quét toàn bộ các vé order đang mở, phân tích khối lượng món theo từng trạm bếp (Nướng, Xào, Lẩu, Bar) và đưa ra cảnh báo thời gian trễ tự động cùng phương án điều phối nhân sự.
+        </p>
+
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+          <input type="checkbox" id="aiFailureCheck" onchange="toggleAiFailure(this.checked)">
+          <label for="aiFailureCheck" style="font-size: 0.8rem; color: #64748B; cursor: pointer;">
+            Bật mô phỏng AI thất bại / Mất kết nối cảm biến trạm (Dành cho Giảng viên kiểm tra)
+          </label>
+        </div>
+
+        <button class="btn btn-ai" onclick="runAiKitchenPredictor()">
+          🚀 Bắt đầu quét & Dự báo tải bếp ngay
+        </button>
+      </div>
+
+      <div id="aiPredictLoading" style="display: none; padding: 24px; text-align: center;">
+        <div style="font-size: 2.2rem; animation: spin 1.5s linear infinite; margin-bottom: 10px;">⚙️</div>
+        <h4 style="color: #4338CA; margin-bottom: 6px;">AI đang tính toán công suất 4 trạm bếp...</h4>
+        <p style="font-size: 0.82rem; color: #6B7280; max-width: 450px; margin: 0 auto 14px;">
+          Đang tổng hợp số lượng món nướng, xào, lẩu, kiểm tra số đầu bếp trong ca trực hiện tại...
+        </p>
+        <div style="height: 6px; background: #E0E7FF; border-radius: 999px; overflow: hidden; width: 60%; margin: 0 auto;">
+          <div class="skeleton-loader" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <div id="aiPredictResult" style="display: none;">
+        <div style="background: #FFFFFF; border-radius: var(--radius-md); padding: 18px; border: 1px solid #C4B5FD; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+            <strong style="color: #4338CA; font-size: 1.05rem;" id="aiResultSummaryTitle">
+              ⚠️ Điểm nghẽn nghiêm trọng: Trạm Bếp Nướng
+            </strong>
+            <span class="badge" style="background:#FEE2E2; color:#B91C1C; font-size:0.8rem;" id="aiOverloadPercent">Quá tải 85%</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 14px;">
+            <div style="background:#F8FAFC; padding:10px; border-radius:var(--radius-sm);">
+              <div style="font-size:0.75rem; color:var(--text-muted);">Số đơn đang xử lý:</div>
+              <strong id="aiActiveOrdersCount" style="color:var(--secondary); font-size:1.1rem;">4 đơn</strong>
+            </div>
+            <div style="background:#F8FAFC; padding:10px; border-radius:var(--radius-sm);">
+              <div style="font-size:0.75rem; color:var(--text-muted);">Tổng số món cần nấu:</div>
+              <strong id="aiTotalItemsCount" style="color:var(--secondary); font-size:1.1rem;">9 món</strong>
+            </div>
+            <div style="background:#F8FAFC; padding:10px; border-radius:var(--radius-sm);">
+              <div style="font-size:0.75rem; color:var(--text-muted);">Dự kiến thời gian chờ TB:</div>
+              <strong id="aiPredictedWait" style="color:#DC2626; font-size:1.1rem;">24 phút</strong>
+            </div>
+          </div>
+
+          <div class="ai-reason-box">
+            <strong>💡 Vì sao có kết quả này?</strong>
+            <p id="aiExplainText" style="margin-top: 4px; font-size: 0.85rem; line-height: 1.5;"></p>
+          </div>
+
+          <div style="background:#ECFDF5; border-left:4px solid #10B981; padding:12px 14px; border-radius:0 8px 8px 0; margin-bottom:14px; font-size:0.88rem; color:#065F46;">
+            <strong>🎯 Khuyến nghị điều phối AI:</strong>
+            <p id="aiRecommendationText" style="margin-top:4px;"></p>
+          </div>
+
+          <div class="ai-actions-bar">
+            <button class="btn btn-primary btn-sm" onclick="acceptAiAdjustment()">
+              ✓ Chấp nhận: Điều phối lại phụ bếp
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="applyDelayToDiners()">
+              Cập nhật cảnh báo chờ +10 phút lên Menu
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="dismissAiPrediction()">
+              Từ chối & Giữ nguyên
+            </button>
+            <button class="btn btn-sm btn-secondary" onclick="runAiKitchenPredictor()">
+              🔄 Dự báo lại
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="aiPredictError" style="display: none; padding: 20px; text-align: center;">
+        <div style="font-size: 2.2rem; margin-bottom: 8px;">⚠️</div>
+        <h4 style="color: #991B1B; margin-bottom: 6px;">Không thể hoàn tất dự báo tải bếp</h4>
+        <p id="aiPredictErrorMsg" style="font-size: 0.85rem; color: #7F1D1D; margin-bottom: 14px;"></p>
+        <button class="btn btn-secondary btn-sm" onclick="resetAiPredictor()">Thử lại</button>
+      </div>
+    </section>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+      <div>
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-size: 1.15rem; color: var(--secondary);">
+              🚨 Danh Sách Bàn Cần Ưu Tiên Xử Lý (Chờ > 15 phút)
+            </h3>
+            <span class="badge badge-urgent" id="criticalCountBadge">2 bàn khẩn</span>
+          </div>
+
+          <div id="alertsList"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3 style="font-size: 1.1rem; color: var(--secondary); margin-bottom: 16px;">
+            📊 Công Suất 4 Trạm Nấu
+          </h3>
+
+          <div class="station-meter">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <strong>Bếp Nướng (Than/Lò)</strong>
+              <span style="color: #DC2626; font-weight: 700;">85% (Quá tải)</span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" style="width: 85%; background: #EF4444;"></div>
+            </div>
+          </div>
+
+          <div class="station-meter">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <strong>Bếp Xào & Chảo</strong>
+              <span style="color: #D97706; font-weight: 700;">60% (Trung bình)</span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" style="width: 60%; background: #F59E0B;"></div>
+            </div>
+          </div>
+
+          <div class="station-meter">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <strong>Bếp Lẩu & Hầm nước</strong>
+              <span style="color: #10B981; font-weight: 700;">40% (Ổn định)</span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" style="width: 40%; background: #10B981;"></div>
+            </div>
+          </div>
+
+          <div class="station-meter">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <strong>Quầy Bar & Pha Chế</strong>
+              <span style="color: #10B981; font-weight: 700;">30% (Thảnh thơi)</span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" style="width: 30%; background: #10B981;"></div>
+            </div>
+          </div>
+
+          <div style="background: #F8FAFC; padding: 12px; border-radius: var(--radius-md); margin-top: 18px; font-size: 0.8rem; color: var(--text-muted);">
+            💡 <em>Mẹo điều phối:</em> Trạm Bar đang có công suất dư thừa (30%). Có thể luân chuyển 1 nhân viên phụ trách pha chế sang hỗ trợ sơ chế rau củ và thịt cho trạm Nướng.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL CREATE ALERT -->
+  <div class="modal-backdrop" id="createAlertModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title">Tạo Cảnh Báo Chờ Mới</h3>
+        <button onclick="closeModal('createAlertModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Chọn Bàn:</label>
+          <select id="alertTableSelect" class="form-control">
+            <option value="Bàn 01">Bàn 01 - Khu A</option>
+            <option value="Bàn 03">Bàn 03 - Khu A</option>
+            <option value="Bàn 04">Bàn 04 - Khu A</option>
+            <option value="Bàn 07">Bàn 07 - Khu B</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Thời gian chờ (phút):</label>
+          <input type="number" id="alertWaitInput" class="form-control" value="25" min="5" max="90">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Lý do chậm trễ:</label>
+          <input type="text" id="alertReasonInput" class="form-control" value="Món bò Wagyu nướng than cần thời gian chín kỹ" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('createAlertModal')">Hủy</button>
+        <button class="btn btn-primary" onclick="submitCreateAlert()">Lưu cảnh báo</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/data/mock-data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/ai-engine.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pages/kitchen-wait-time-alerts.js"></script>
+</body>
+</html>
